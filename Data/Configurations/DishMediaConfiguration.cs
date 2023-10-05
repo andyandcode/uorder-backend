@@ -11,8 +11,8 @@ namespace Data.Configurations
             builder.ToTable("DishOfMedia");
             builder.HasKey(x => new { x.MediaId, x.DishId });
 
-            builder.HasOne(x => x.Media).WithMany(x => x.DishMedias).HasForeignKey(x => x.MediaId);
-            builder.HasOne(x => x.Dish).WithMany(x => x.DishMedias).HasForeignKey(x => x.DishId);
+            builder.HasOne(x => x.Media).WithMany(x => x.DishMedias).HasForeignKey(x => x.MediaId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Dish).WithMany(x => x.DishMedias).HasForeignKey(x => x.DishId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
