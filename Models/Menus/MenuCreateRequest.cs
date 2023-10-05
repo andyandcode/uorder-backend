@@ -9,7 +9,7 @@ namespace Models.Menus
         private readonly IdGeneration item = new IdGeneration();
 
         [SwaggerSchema(ReadOnly = true)]
-        public string Id => item.Generator(GenerationType.Dish);
+        public string Id => item.Generator(GenerationType.Menu);
 
         [Required]
         public string Name { get; set; }
