@@ -4,6 +4,7 @@ using Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    partial class UOrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231005121306_initial2")]
+    partial class initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 31, 21, 542, DateTimeKind.Local).AddTicks(8304));
+                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 13, 6, 700, DateTimeKind.Local).AddTicks(6484));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -140,7 +143,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 31, 21, 544, DateTimeKind.Local).AddTicks(4453));
+                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 13, 6, 701, DateTimeKind.Local).AddTicks(6806));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -164,7 +167,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 31, 21, 544, DateTimeKind.Local).AddTicks(7866));
+                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 13, 6, 701, DateTimeKind.Local).AddTicks(8418));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -194,7 +197,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 31, 21, 544, DateTimeKind.Local).AddTicks(9646));
+                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 13, 6, 701, DateTimeKind.Local).AddTicks(9433));
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -264,10 +267,6 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<string>("Domain")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("SystemSettings", (string)null);
@@ -276,8 +275,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = "1",
-                            ChefCount = 1,
-                            Domain = "https://localhost:7297"
+                            ChefCount = 1
                         });
                 });
 
@@ -289,7 +287,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 31, 21, 551, DateTimeKind.Local).AddTicks(7862));
+                        .HasDefaultValue(new DateTime(2023, 10, 5, 19, 13, 6, 702, DateTimeKind.Local).AddTicks(7988));
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -306,10 +304,6 @@ namespace Data.Migrations
                         .HasDefaultValue(true);
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Route")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
