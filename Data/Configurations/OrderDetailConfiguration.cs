@@ -12,8 +12,8 @@ namespace Data.Configurations
             builder.HasKey(x => new { x.OrderId, x.DishId });
             builder.Property(x => x.Note).HasMaxLength(500);
 
-            builder.HasOne(x => x.Order).WithMany(x => x.OrderDetails).HasForeignKey(x => x.OrderId);
-            builder.HasOne(x => x.Dish).WithMany(x => x.OrderDetails).HasForeignKey(x => x.DishId);
+            builder.HasOne(x => x.Order).WithMany(x => x.OrderDetails).HasForeignKey(x => x.OrderId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Dish).WithMany(x => x.OrderDetails).HasForeignKey(x => x.DishId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
