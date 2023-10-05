@@ -14,6 +14,7 @@ namespace Data.Configurations
             builder.Property(x => x.Desc).HasMaxLength(500);
             builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
             builder.Property(x => x.Data).IsRequired();
+            builder.Property(x => x.Name).IsRequired();
         }
     }
 }
