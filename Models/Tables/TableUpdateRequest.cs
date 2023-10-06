@@ -17,6 +17,12 @@ namespace Models.Tables
         [Required]
         public bool IsActive { get; set; }
 
+        [Required]
+        public string Route { get; set; }
+
+        [Required]
+        public string Data { get; set; }
+
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt { get; set; }
     }

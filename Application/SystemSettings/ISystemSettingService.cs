@@ -8,6 +8,6 @@ namespace Application.SystemSettings
 
         Task<int> Update(SystemSettingUpdateRequest req);
 
-        List<SystemSettingVm> GetAll();
+        Task<SystemSettingVm> GetSettings();
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Application.Dishes;
+using Application.Medias;
 using Application.Menus;
 using Application.Orders;
+using Application.SystemSettings;
 using Application.Tables;
 using Data.EF;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +31,7 @@ namespace WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "Employee API",
+                    Title = "UOrder API",
                     Version = "v1",
                 });
                 // Set the comments path for the Swagger JSON and UI.
@@ -40,9 +42,11 @@ namespace WebApi
             });
 
             services.AddTransient<IDishService, DishService>();
+            services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<IMenuService, MenuService>();
-            services.AddTransient<ITableService, TableService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<ISystemSettingService, SystemSettingService>();
+            services.AddTransient<ITableService, TableService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

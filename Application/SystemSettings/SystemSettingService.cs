@@ -1,5 +1,6 @@
 ﻿using Data.EF;
 using Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Models.SystemSettings;
 
 namespace Application.SystemSettings
@@ -37,14 +38,14 @@ namespace Application.SystemSettings
             return await _context.SaveChangesAsync();
         }
 
-        public List<SystemSettingVm> GetAll()
+        public async Task<SystemSettingVm> GetSettings()
         {
-            return _context.SystemSettings.ToList().Select(p => new SystemSettingVm()
+            return await _context.SystemSettings.Select(p => new SystemSettingVm()
             {
                 Id = p.Id,
                 ChefCount = p.ChefCount,
                 Domain = p.Domain,
-            }).ToList();
+            }).FirstAsync();
         }
     }
 }
