@@ -80,13 +80,12 @@ namespace Application.Orders
                 Total = p.Total,
                 Note = p.Note,
                 TableId = p.TableId,
-                //TableName = p.Table.Name,
+                TableName = p.Table.Name,
                 OrderStatus = p.OrderStatus,
                 OrderStatusKey = p.OrderStatus.ToString().ToLower(),
                 PaymentStatus = p.PaymentStatus,
                 PaymentStatusKey = p.PaymentStatus.ToString().ToLower(),
                 CreatedAt = p.CreatedAt,
-                Table = p.Table,
             }).ToList();
         }
 
@@ -106,7 +105,6 @@ namespace Application.Orders
                 PaymentStatus = target.PaymentStatus,
                 PaymentStatusKey = target.PaymentStatus.ToString().ToLower(),
                 CreatedAt = target.CreatedAt,
-                Table = target.Table,
             };
 
             return item;

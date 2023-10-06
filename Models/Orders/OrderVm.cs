@@ -1,5 +1,4 @@
-﻿using Data.Entities;
-using Data.Enums;
+﻿using Data.Enums;
 
 namespace Models.Orders
 {
@@ -16,6 +15,5 @@ namespace Models.Orders
         public string PaymentStatusKey { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<string> OrderDetails { get; set; } = new List<string>();
-        public Table Table { get; set; } = new Table();
     }
 }
