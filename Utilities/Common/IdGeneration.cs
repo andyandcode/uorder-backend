@@ -4,22 +4,29 @@
     {
         public string Generator(GenerationType type)
         {
-            foreach (var item in Enum.GetNames(typeof(GenerationType)))
-            {
-                if (item.ToString() == type.ToString())
-                { return item.ToString().ToUpper() + "-" + Generate(); }
-            }
-            return "";
+            return GenerationTypeNumber(type) + GenerationTime();
         }
 
-        private string Generate()
+        private string GenerationTime()
         {
-            Guid guid = Guid.NewGuid();
             DateTime now = DateTime.Now;
             string date = now.Date.ToString("dd");
             string month = now.Month.ToString("00");
-            string year = now.Year.ToString("0000");
-            return date + month + year + guid.ToString().Substring(guid.ToString().Length - 17).ToUpper();
+            string year = now.Year.ToString("0000").Substring(2, 2);
+            string tick = now.Ticks.ToString("");
+            return date + month + year + "-" + tick.Substring(tick.Length - 6);
+        }
+
+        private string GenerationTypeNumber(GenerationType type)
+        {
+            string newstr = string.Empty;
+
+            foreach (var item in type.ToString())
+            {
+                newstr += Convert.ToInt32(item);
+            }
+
+            return newstr.ToString().ToLower().Substring(newstr.Length - 6) + "-";
         }
     }
 }
