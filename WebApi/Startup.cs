@@ -1,5 +1,6 @@
 ﻿using Application.Dishes;
 using Application.Menus;
+using Application.Orders;
 using Application.Tables;
 using Data.EF;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,7 @@ namespace WebApi
             services.AddTransient<IDishService, DishService>();
             services.AddTransient<IMenuService, MenuService>();
             services.AddTransient<ITableService, TableService>();
+            services.AddTransient<IOrderService, OrderService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -69,7 +69,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 22, 14, 4, 721, DateTimeKind.Local).AddTicks(9306));
+                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 59, 10, 493, DateTimeKind.Local).AddTicks(2010));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -140,7 +140,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 22, 14, 4, 723, DateTimeKind.Local).AddTicks(1786));
+                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 59, 10, 494, DateTimeKind.Local).AddTicks(2545));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -164,7 +164,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 22, 14, 4, 723, DateTimeKind.Local).AddTicks(3921));
+                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 59, 10, 494, DateTimeKind.Local).AddTicks(4114));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -192,9 +192,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 22, 14, 4, 723, DateTimeKind.Local).AddTicks(5196));
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -202,17 +200,12 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("OrderStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.Property<int>("PaymentStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasColumnType("int");
 
                     b.Property<string>("TableId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Total")
@@ -287,9 +280,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 22, 14, 4, 724, DateTimeKind.Local).AddTicks(5813));
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -301,9 +292,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -361,7 +350,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.Table", "Table")
                         .WithMany("Orders")
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Table");

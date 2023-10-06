@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    [Migration("20231005072804_initial1")]
-    partial class initial1
+    [Migration("20231006115229_initial3")]
+    partial class initial3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -72,7 +72,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 14, 28, 4, 106, DateTimeKind.Local).AddTicks(4459));
+                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 52, 29, 412, DateTimeKind.Local).AddTicks(1211));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -143,7 +143,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 14, 28, 4, 108, DateTimeKind.Local).AddTicks(2380));
+                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 52, 29, 415, DateTimeKind.Local).AddTicks(1492));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -167,7 +167,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 14, 28, 4, 108, DateTimeKind.Local).AddTicks(4215));
+                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 52, 29, 415, DateTimeKind.Local).AddTicks(3884));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -195,9 +195,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 14, 28, 4, 108, DateTimeKind.Local).AddTicks(5164));
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Note")
                         .IsRequired()
@@ -205,17 +203,12 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("OrderStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.Property<int>("PaymentStatus")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(1);
+                        .HasColumnType("int");
 
                     b.Property<string>("TableId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Total")
@@ -267,6 +260,10 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
+                    b.Property<string>("Domain")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("SystemSettings", (string)null);
@@ -275,7 +272,8 @@ namespace Data.Migrations
                         new
                         {
                             Id = "1",
-                            ChefCount = 1
+                            ChefCount = 1,
+                            Domain = "https://localhost:7297"
                         });
                 });
 
@@ -285,9 +283,7 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 5, 14, 28, 4, 109, DateTimeKind.Local).AddTicks(3563));
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Data")
                         .IsRequired()
@@ -299,9 +295,15 @@ namespace Data.Migrations
                         .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Route")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -351,7 +353,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.Table", "Table")
                         .WithMany("Orders")
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Table");
