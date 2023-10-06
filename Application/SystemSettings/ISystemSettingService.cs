@@ -7,5 +7,7 @@ namespace Application.SystemSettings
         Task<int> Create(SystemSettingCreateRequest req);
 
         Task<int> Update(SystemSettingUpdateRequest req);
+
+        List<SystemSettingVm> GetAll();
     }
 }

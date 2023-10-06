@@ -15,43 +15,29 @@ namespace Application.Menus
 
         public async Task<int> Create(MenuCreateRequest req)
         {
-            try
+            var item = new Menu()
             {
-                var item = new Menu()
-                {
-                    Id = req.Id,
-                    Name = req.Name,
-                    IsActive = req.IsActive,
-                    Desc = req.Desc,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Add(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Name = req.Name,
+                IsActive = req.IsActive,
+                Desc = req.Desc,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Add(item);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(MenuUpdateRequest req)
         {
-            try
+            var item = new Menu()
             {
-                var item = new Menu()
-                {
-                    Id = req.Id,
-                    Name = req.Name,
-                    IsActive = req.IsActive,
-                    Desc = req.Desc,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Update(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Name = req.Name,
+                IsActive = req.IsActive,
+                Desc = req.Desc,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Update(item);
             return await _context.SaveChangesAsync();
         }
 
@@ -66,7 +52,7 @@ namespace Application.Menus
             return await _context.SaveChangesAsync();
         }
 
-        public List<MenuVm> GetAllMenu()
+        public List<MenuVm> GetAll()
         {
             return _context.Menus.ToList().Select(p => new MenuVm()
             {
@@ -78,7 +64,7 @@ namespace Application.Menus
             }).ToList();
         }
 
-        public async Task<MenuVm> GetMenuById(string id)
+        public async Task<MenuVm> GetById(string id)
         {
             var target = await _context.Menus.FindAsync(id);
             if (target == null)

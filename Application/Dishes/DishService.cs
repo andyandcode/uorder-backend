@@ -15,66 +15,48 @@ namespace Application.Dishes
 
         public async Task<int> Create(DishCreateRequest req)
         {
-            try
+            var item = new Dish()
             {
-                var item = new Dish()
-                {
-                    Id = req.Id,
-                    Name = req.Name,
-                    IsActive = req.IsActive,
-                    Desc = req.Desc,
-                    Price = req.Price,
-                    CompletionTime = req.CompletionTime,
-                    QtyPerDate = req.QtyPerDate,
-                    Type = req.Type,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Add(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Name = req.Name,
+                IsActive = req.IsActive,
+                Desc = req.Desc,
+                Price = req.Price,
+                CompletionTime = req.CompletionTime,
+                QtyPerDate = req.QtyPerDate,
+                Type = req.Type,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Add(item);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(DishUpdateRequest req)
         {
-            try
+            var item = new Dish()
             {
-                var item = new Dish()
-                {
-                    Id = req.Id,
-                    Name = req.Name,
-                    IsActive = req.IsActive,
-                    Desc = req.Desc,
-                    Price = req.Price,
-                    CompletionTime = req.CompletionTime,
-                    QtyPerDate = req.QtyPerDate,
-                    Type = req.Type,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Update(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Name = req.Name,
+                IsActive = req.IsActive,
+                Desc = req.Desc,
+                Price = req.Price,
+                CompletionTime = req.CompletionTime,
+                QtyPerDate = req.QtyPerDate,
+                Type = req.Type,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Update(item);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Delete(string id)
         {
             var product = await _context.Dishes.FindAsync(id);
-            if (product == null)
-                return 0;
-
             _context.Dishes.Remove(product);
-
             return await _context.SaveChangesAsync();
         }
 
-        public List<DishVm> GetAllDish()
+        public List<DishVm> GetAll()
         {
             return _context.Dishes.ToList().Select(p => new DishVm()
             {
@@ -91,7 +73,7 @@ namespace Application.Dishes
             }).ToList();
         }
 
-        public async Task<DishVm> GetDishById(string id)
+        public async Task<DishVm> GetById(string id)
         {
             var product = await _context.Dishes.FindAsync(id);
             if (product == null)

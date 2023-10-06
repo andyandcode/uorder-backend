@@ -10,8 +10,8 @@ namespace Application.Orders
 
         Task<int> Delete(string id);
 
-        Task<List<OrderVm>> GetAllOrder();
+        Task<List<OrderVm>> GetAll();
 
-        Task<OrderVm> GetOrderById(string id);
+        Task<OrderVm> GetById(string id);
     }
 }

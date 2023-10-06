@@ -10,8 +10,8 @@ namespace Application.Dishes
 
         Task<int> Delete(string id);
 
-        List<DishVm> GetAllDish();
+        List<DishVm> GetAll();
 
-        Task<DishVm> GetDishById(string id);
+        Task<DishVm> GetById(string id);
     }
 }

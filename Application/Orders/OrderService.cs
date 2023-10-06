@@ -16,47 +16,33 @@ namespace Application.Orders
 
         public async Task<int> Create(OrderCreateRequest req)
         {
-            try
+            var item = new Order()
             {
-                var item = new Order()
-                {
-                    Id = req.Id,
-                    Total = req.Total,
-                    Note = req.Note,
-                    TableId = req.TableId,
-                    OrderStatus = req.OrderStatus,
-                    PaymentStatus = req.PaymentStatus,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Add(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Total = req.Total,
+                Note = req.Note,
+                TableId = req.TableId,
+                OrderStatus = req.OrderStatus,
+                PaymentStatus = req.PaymentStatus,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Add(item);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(OrderUpdateRequest req)
         {
-            try
+            var item = new Order()
             {
-                var item = new Order()
-                {
-                    Id = req.Id,
-                    Total = req.Total,
-                    Note = req.Note,
-                    TableId = req.TableId,
-                    OrderStatus = req.OrderStatus,
-                    PaymentStatus = req.PaymentStatus,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Update(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Total = req.Total,
+                Note = req.Note,
+                TableId = req.TableId,
+                OrderStatus = req.OrderStatus,
+                PaymentStatus = req.PaymentStatus,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Update(item);
             return await _context.SaveChangesAsync();
         }
 
@@ -71,7 +57,7 @@ namespace Application.Orders
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<OrderVm>> GetAllOrder()
+        public async Task<List<OrderVm>> GetAll()
         {
             var list = await _context.Orders.ToListAsync();
             return list.Select(p => new OrderVm()
@@ -89,7 +75,7 @@ namespace Application.Orders
             }).ToList();
         }
 
-        public async Task<OrderVm> GetOrderById(string id)
+        public async Task<OrderVm> GetById(string id)
         {
             var target = await _context.Orders.FindAsync(id);
 

@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _orderService.GetAllOrder();
+            var list = await _orderService.GetAll();
             return Ok(list);
         }
 
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var result = await _orderService.GetOrderById(id);
+            var result = await _orderService.GetById(id);
             if (result == null)
                 return BadRequest();
             return Ok(result);

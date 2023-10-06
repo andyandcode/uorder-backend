@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
-            var dish = _dishService.GetAllDish();
+            var dish = _dishService.GetAll();
             return Ok(dish);
         }
 
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var result = await _dishService.GetDishById(id);
+            var result = await _dishService.GetById(id);
             if (result == null)
                 return BadRequest();
             return Ok(result);

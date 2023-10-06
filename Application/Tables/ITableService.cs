@@ -10,8 +10,8 @@ namespace Application.Tables
 
         Task<int> Delete(string id);
 
-        List<TableVm> GetAllTable();
+        List<TableVm> GetAll();
 
-        Task<TableVm> GetTableById(string id);
+        Task<TableVm> GetById(string id);
     }
 }

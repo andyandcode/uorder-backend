@@ -15,40 +15,36 @@ namespace Application.SystemSettings
 
         public async Task<int> Create(SystemSettingCreateRequest req)
         {
-            try
+            var item = new SystemSetting()
             {
-                var item = new SystemSetting()
-                {
-                    Id = req.Id,
-                    ChefCount = req.ChefCount,
-                    Domain = req.Domain,
-                };
-                _context.Add(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                ChefCount = req.ChefCount,
+                Domain = req.Domain,
+            };
+            _context.Add(item);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(SystemSettingUpdateRequest req)
         {
-            try
+            var item = new SystemSetting()
             {
-                var item = new SystemSetting()
-                {
-                    Id = req.Id,
-                    ChefCount = req.ChefCount,
-                    Domain = req.Domain,
-                };
-                _context.Update(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                ChefCount = req.ChefCount,
+                Domain = req.Domain,
+            };
+            _context.Update(item);
             return await _context.SaveChangesAsync();
+        }
+
+        public List<SystemSettingVm> GetAll()
+        {
+            return _context.SystemSettings.ToList().Select(p => new SystemSettingVm()
+            {
+                Id = p.Id,
+                ChefCount = p.ChefCount,
+                Domain = p.Domain,
+            }).ToList();
         }
     }
 }

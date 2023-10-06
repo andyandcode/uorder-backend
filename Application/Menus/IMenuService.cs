@@ -10,8 +10,8 @@ namespace Application.Menus
 
         Task<int> Delete(string id);
 
-        List<MenuVm> GetAllMenu();
+        List<MenuVm> GetAll();
 
-        Task<MenuVm> GetMenuById(string id);
+        Task<MenuVm> GetById(string id);
     }
 }

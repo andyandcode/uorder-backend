@@ -15,21 +15,14 @@ namespace Application.Medias
 
         public async Task<int> Create(MediaCreateRequest req)
         {
-            try
+            var item = new Media()
             {
-                var item = new Media()
-                {
-                    Id = req.Id,
-                    Desc = req.Desc,
-                    Path = req.Path,
-                    CreatedAt = req.CreatedAt,
-                };
-                _context.Add(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Desc = req.Desc,
+                Path = req.Path,
+                CreatedAt = req.CreatedAt,
+            };
+            _context.Add(item);
             return await _context.SaveChangesAsync();
         }
 

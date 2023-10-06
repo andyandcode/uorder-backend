@@ -15,47 +15,33 @@ namespace Application.Tables
 
         public async Task<int> Create(TableCreateRequest req)
         {
-            try
+            var item = new Table()
             {
-                var item = new Table()
-                {
-                    Id = req.Id,
-                    Name = req.Name,
-                    IsActive = req.IsActive,
-                    Desc = req.Desc,
-                    CreatedAt = req.CreatedAt,
-                    Route = "",
-                    Data = "",
-                };
-                _context.Add(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Name = req.Name,
+                IsActive = req.IsActive,
+                Desc = req.Desc,
+                CreatedAt = req.CreatedAt,
+                Route = "",
+                Data = "",
+            };
+            _context.Add(item);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(TableUpdateRequest req)
         {
-            try
+            var item = new Table()
             {
-                var item = new Table()
-                {
-                    Id = req.Id,
-                    Name = req.Name,
-                    IsActive = req.IsActive,
-                    Desc = req.Desc,
-                    CreatedAt = req.CreatedAt,
-                    Route = "",
-                    Data = "",
-                };
-                _context.Update(item);
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
+                Id = req.Id,
+                Name = req.Name,
+                IsActive = req.IsActive,
+                Desc = req.Desc,
+                CreatedAt = req.CreatedAt,
+                Route = "",
+                Data = "",
+            };
+            _context.Update(item);
             return await _context.SaveChangesAsync();
         }
 
@@ -70,7 +56,7 @@ namespace Application.Tables
             return await _context.SaveChangesAsync();
         }
 
-        public List<TableVm> GetAllTable()
+        public List<TableVm> GetAll()
         {
             return _context.Tables.ToList().Select(p => new TableVm()
             {
@@ -84,7 +70,7 @@ namespace Application.Tables
             }).ToList();
         }
 
-        public async Task<TableVm> GetTableById(string id)
+        public async Task<TableVm> GetById(string id)
         {
             var target = await _context.Tables.FindAsync(id);
             if (target == null)

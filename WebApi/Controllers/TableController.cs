@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
-            var list = _tableService.GetAllTable();
+            var list = _tableService.GetAll();
             return Ok(list);
         }
 
@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var result = await _tableService.GetTableById(id);
+            var result = await _tableService.GetById(id);
             if (result == null)
                 return BadRequest();
             return Ok(result);
