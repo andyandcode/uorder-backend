@@ -1,4 +1,9 @@
 ﻿<PropertyGroup>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<NoWarn>$(NoWarn);1591</NoWarn>
+	<configuration>
+		<system.webServer>
+			<httpErrors errorMode="Detailed" />
+		</system.webServer>
+	</configuration>
 </PropertyGroup>

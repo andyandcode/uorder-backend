@@ -21,9 +21,9 @@ namespace Application.Dishes
                 Name = req.Name,
                 IsActive = req.IsActive,
                 Desc = req.Desc,
-                Price = req.Price,
+                Price = Int32.Parse(string.Concat(req.Price.ToString().Where(char.IsDigit))),
                 CompletionTime = req.CompletionTime,
-                QtyPerDate = req.QtyPerDate,
+                QtyPerDay = req.QtyPerDay,
                 Type = req.Type,
                 CreatedAt = req.CreatedAt,
             };
@@ -41,7 +41,7 @@ namespace Application.Dishes
                 Desc = req.Desc,
                 Price = req.Price,
                 CompletionTime = req.CompletionTime,
-                QtyPerDate = req.QtyPerDate,
+                QtyPerDay = req.QtyPerDay,
                 Type = req.Type,
                 CreatedAt = req.CreatedAt,
             };
@@ -60,13 +60,14 @@ namespace Application.Dishes
         {
             return _context.Dishes.ToList().Select(p => new DishVm()
             {
+                Key = p.Id,
                 Id = p.Id,
                 Name = p.Name,
                 Desc = p.Desc,
                 Price = p.Price,
                 IsActive = p.IsActive,
                 CompletionTime = p.CompletionTime,
-                QtyPerDate = p.QtyPerDate,
+                QtyPerDay = p.QtyPerDay,
                 Type = p.Type,
                 CreatedAt = p.CreatedAt,
                 TypeName = p.Type.ToString(),
@@ -87,7 +88,7 @@ namespace Application.Dishes
                 Desc = product.Desc,
                 Price = product.Price,
                 CompletionTime = product.CompletionTime,
-                QtyPerDate = product.QtyPerDate,
+                QtyPerDay = product.QtyPerDay,
                 Type = product.Type,
                 CreatedAt = product.CreatedAt,
             };
