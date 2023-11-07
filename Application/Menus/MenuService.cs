@@ -56,6 +56,7 @@ namespace Application.Menus
         {
             return _context.Menus.ToList().Select(p => new MenuVm()
             {
+                Key = p.Id,
                 Id = p.Id,
                 Name = p.Name,
                 Desc = p.Desc,

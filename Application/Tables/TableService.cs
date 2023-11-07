@@ -66,6 +66,7 @@ namespace Application.Tables
         {
             return _context.Tables.ToList().Select(p => new TableVm()
             {
+                Key = p.Id,
                 Id = p.Id,
                 Name = p.Name,
                 Desc = p.Desc,
