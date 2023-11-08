@@ -19,9 +19,9 @@ namespace WebApi.Controllers
         /// Gets the list of all menus.
         /// </summary>
         [HttpGet("getAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var dish = _menuService.GetAll();
+            var dish = await _menuService.GetAll();
             return Ok(dish);
         }
 

@@ -15,6 +15,6 @@ namespace Data.Entities
         public DateTime CreatedAt { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
         public List<DishMedia> DishMedias { get; set; }
-        public List<DishMenu> DishMenus { get; set; }
+        public virtual ICollection<DishMenu> Menus { get; set; }
     }
 }

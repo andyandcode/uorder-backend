@@ -4,6 +4,7 @@ using Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    partial class UOrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231108084105_initial10")]
+    partial class initial10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 8, 17, 6, 47, 732, DateTimeKind.Local).AddTicks(917));
+                        .HasDefaultValue(new DateTime(2023, 11, 8, 15, 41, 5, 34, DateTimeKind.Local).AddTicks(2776));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -140,7 +143,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 8, 17, 6, 47, 733, DateTimeKind.Local).AddTicks(4803));
+                        .HasDefaultValue(new DateTime(2023, 11, 8, 15, 41, 5, 35, DateTimeKind.Local).AddTicks(7771));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -164,7 +167,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 8, 17, 6, 47, 733, DateTimeKind.Local).AddTicks(6899));
+                        .HasDefaultValue(new DateTime(2023, 11, 8, 15, 41, 5, 36, DateTimeKind.Local).AddTicks(2794));
 
                     b.Property<string>("Desc")
                         .IsRequired()

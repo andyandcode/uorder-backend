@@ -95,5 +95,23 @@ namespace Application.Dishes
 
             return item;
         }
+
+        public List<DishVm> GetAllById(string id)
+        {
+            return _context.Dishes.ToList().Where(s => s.Id == id).Select(p => new DishVm()
+            {
+                Key = p.Id,
+                Id = p.Id,
+                Name = p.Name,
+                Desc = p.Desc,
+                Price = p.Price,
+                IsActive = p.IsActive,
+                CompletionTime = p.CompletionTime,
+                QtyPerDay = p.QtyPerDay,
+                Type = p.Type,
+                CreatedAt = p.CreatedAt,
+                TypeName = p.Type.ToString(),
+            }).ToList();
+        }
     }
 }

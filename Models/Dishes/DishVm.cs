@@ -1,4 +1,5 @@
 ﻿using Data.Enums;
+using Models.Menus;
 
 namespace Models.Dishes
 {
@@ -17,6 +18,6 @@ namespace Models.Dishes
         public DateTime CreatedAt { get; set; }
         public List<string> OrderDetails { get; set; } = new List<string>();
         public List<string> DishMedias { get; set; } = new List<string>();
-        public List<string> DishMenus { get; set; } = new List<string>();
+        public virtual List<MenuVm> DishMenus { get; set; }
     }
 }
