@@ -2,7 +2,6 @@
 using Data.EF;
 using Data.Entities;
 using Models.Tables;
-using Utilities.Common;
 
 namespace Application.Tables
 {
@@ -20,7 +19,6 @@ namespace Application.Tables
         public async Task<int> Create(TableCreateRequest req)
         {
             var setting = await _systemSettingService.GetSettings();
-            GeneratingQRCode gen = new GeneratingQRCode();
             var item = new Table()
             {
                 Id = req.Id,
@@ -29,7 +27,6 @@ namespace Application.Tables
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
                 Route = setting.Domain + "/booking/" + req.Id,
-                Data = gen.CreateQRCode(setting.Domain + "/booking/" + req.Id),
             };
             _context.Add(item);
             return await _context.SaveChangesAsync();
@@ -37,6 +34,7 @@ namespace Application.Tables
 
         public async Task<int> Update(TableUpdateRequest req)
         {
+            var setting = await _systemSettingService.GetSettings();
             var item = new Table()
             {
                 Id = req.Id,
@@ -44,8 +42,7 @@ namespace Application.Tables
                 IsActive = req.IsActive,
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
-                Route = req.Route,
-                Data = "",
+                Route = setting.Domain + "/booking/" + req.Id,
             };
             _context.Update(item);
             return await _context.SaveChangesAsync();
@@ -62,8 +59,9 @@ namespace Application.Tables
             return await _context.SaveChangesAsync();
         }
 
-        public List<TableVm> GetAll()
+        public async Task<List<TableVm>> GetAll()
         {
+            var setting = await _systemSettingService.GetSettings();
             return _context.Tables.ToList().Select(p => new TableVm()
             {
                 Key = p.Id,
@@ -72,8 +70,7 @@ namespace Application.Tables
                 Desc = p.Desc,
                 IsActive = p.IsActive,
                 CreatedAt = p.CreatedAt,
-                Data = p.Data,
-                Route = p.Route
+                Route = setting.Domain + "/booking/" + p.Id,
             }).ToList();
         }
 
@@ -90,7 +87,6 @@ namespace Application.Tables
                 IsActive = target.IsActive,
                 Desc = target.Desc,
                 CreatedAt = target.CreatedAt,
-                Data = target.Data,
                 Route = target.Route,
             };
 

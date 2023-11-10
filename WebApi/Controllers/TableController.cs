@@ -19,9 +19,9 @@ namespace WebApi.Controllers
         /// Gets the list of all tables.
         /// </summary>
         [HttpGet("getAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var list = _tableService.GetAll();
+            var list = await _tableService.GetAll();
             return Ok(list);
         }
 

@@ -13,7 +13,6 @@ namespace Data.Configurations
             builder.Property(x => x.CreatedAt).IsRequired();
             builder.Property(x => x.Desc).HasMaxLength(500);
             builder.Property(x => x.IsActive).IsRequired();
-            builder.Property(x => x.Data).IsRequired();
             builder.Property(x => x.Name).IsRequired();
 
             builder.HasMany(x => x.Orders).WithOne(x => x.Table).HasForeignKey(x => x.TableId).OnDelete(DeleteBehavior.SetNull);

@@ -1,5 +1,4 @@
-﻿using Data.Entities;
-using Data.Enums;
+﻿using Data.Enums;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Utilities.Common;
@@ -36,7 +35,5 @@ namespace Models.Dishes
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt => DateTime.Now;
-
-        public virtual ICollection<DishMenu> Menues { get; set; }
     }
 }
