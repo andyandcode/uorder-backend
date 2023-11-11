@@ -1,4 +1,6 @@
-﻿using Models.Orders;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
+using Models.Orders;
 
 namespace Application.Orders
 {
@@ -13,5 +15,7 @@ namespace Application.Orders
         Task<List<OrderVm>> GetAll();
 
         Task<OrderVm> GetById(string id);
+
+        Task<int> UpdateOrderStatus(string id, JsonPatchDocument<Order> patchDoc);
     }
 }

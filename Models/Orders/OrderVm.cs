@@ -1,11 +1,12 @@
 ﻿using Data.Enums;
+using Models.OrderDetails;
 
 namespace Models.Orders
 {
     public class OrderVm
     {
+        public string Key { get; set; }
         public string Id { get; set; }
-        public int Total { get; set; }
         public string Note { get; set; }
         public string TableId { get; set; }
         public string TableName { get; set; }
@@ -14,6 +15,10 @@ namespace Models.Orders
         public PaymentStatus PaymentStatus { get; set; }
         public string PaymentStatusKey { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<string> OrderDetails { get; set; } = new List<string>();
+        public virtual List<OrderDetailsVm> OrderDetails { get; set; }
+        public OrderType OrderType { get; set; }
+        public int Subtotal { get; set; }
+        public int Total { get; set; }
+        public int Discount { get; set; }
     }
 }

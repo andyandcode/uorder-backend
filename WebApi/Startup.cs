@@ -1,4 +1,5 @@
-﻿using Application.Dishes;
+﻿using Application.AutoMapper;
+using Application.Dishes;
 using Application.Medias;
 using Application.Menus;
 using Application.Orders;
@@ -25,7 +26,7 @@ namespace WebApi
         {
             services.AddDbContext<UOrderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -40,6 +41,7 @@ namespace WebApi
                 c.IncludeXmlComments(xmlFilename);
                 c.EnableAnnotations();
             });
+            services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
 
             services.AddTransient<IDishService, DishService>();
             services.AddTransient<IMediaService, MediaService>();

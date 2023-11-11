@@ -1,4 +1,5 @@
 ﻿using Data.Enums;
+using Models.OrderDetails;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Utilities.Common;
@@ -16,10 +17,13 @@ namespace Models.Orders
         public int Total { get; set; }
 
         [Required]
-        public string Note { get; set; }
+        public int Subtotal { get; set; }
 
-        [Required]
-        public string TableId { get; set; }
+        public int Discount { get; set; }
+
+        public string? Note { get; set; }
+
+        public string? TableId { get; set; }
 
         [Required]
         public OrderStatus OrderStatus { get; set; }
@@ -29,5 +33,11 @@ namespace Models.Orders
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt => DateTime.Now;
+
+        [Required]
+        public OrderType OrderType { get; set; }
+
+        [Required]
+        public List<OrderDetailsCreateRequest> OrderDetails { get; set; }
     }
 }

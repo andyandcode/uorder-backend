@@ -1,4 +1,6 @@
 ﻿using Application.Orders;
+using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Models.Orders;
 
@@ -78,6 +80,18 @@ namespace WebApi.Controllers
 
             var result = await _orderService.Update(req);
             if (result == 0)
+                return BadRequest();
+            return Ok();
+        }
+
+        /// <summary>
+        /// Update the order status specified by Id
+        /// </summary>
+        [HttpPatch("patch/{id}")]
+        public async Task<IActionResult> UpdateOrderStatus(string id, [FromBody] JsonPatchDocument<Order> patchDoc)
+        {
+            var result = await _orderService.UpdateOrderStatus(id, patchDoc);
+            if (result == null)
                 return BadRequest();
             return Ok();
         }
