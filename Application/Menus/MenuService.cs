@@ -53,7 +53,7 @@ namespace Application.Menus
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
             };
-            var assets = await _context.DishMenus.Where(a => a.MenuId.Contains(a.MenuId)).ToArrayAsync();
+            var assets = _context.DishMenus.Where(a => a.MenuId.Contains(req.Id)).ToList();
 
             if (assets == null)
             {
@@ -96,6 +96,34 @@ namespace Application.Menus
                 IsActive = p.IsActive,
                 CreatedAt = p.CreatedAt,
                 Dishes = p.Dishes.ToList().Select(i => new DishVm()
+                {
+                    Key = i.Dish.Id,
+                    Id = i.Dish.Id,
+                    Name = i.Dish.Name,
+                    Desc = i.Dish.Desc,
+                    Price = i.Dish.Price,
+                    IsActive = i.Dish.IsActive,
+                    CompletionTime = i.Dish.CompletionTime,
+                    QtyPerDay = i.Dish.QtyPerDay,
+                    Type = i.Dish.Type,
+                    CreatedAt = i.Dish.CreatedAt,
+                    TypeName = i.Dish.Type.ToString(),
+                }).ToList(),
+            }).ToListAsync();
+            return result;
+        }
+
+        public async Task<List<MenuVm>> GetAllAvailable()
+        {
+            var result = await _context.Menus.Include(one => one.Dishes).ThenInclude(dishes => dishes.Dish).Where(menu => menu.IsActive == true).Select(p => new MenuVm()
+            {
+                Key = p.Id,
+                Id = p.Id,
+                Name = p.Name,
+                Desc = p.Desc,
+                IsActive = p.IsActive,
+                CreatedAt = p.CreatedAt,
+                Dishes = p.Dishes.ToList().Where(dish => dish.Dish.IsActive == true).Select(i => new DishVm()
                 {
                     Key = i.Dish.Id,
                     Id = i.Dish.Id,

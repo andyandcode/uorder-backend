@@ -2,6 +2,7 @@
 using Data.Entities;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Models.Orders;
 
 namespace WebApi.Controllers
@@ -10,11 +11,13 @@ namespace WebApi.Controllers
     [Route("order")]
     public class OrderController : Controller
     {
+        private readonly IHubContext<OrderHub> _hubContext;
         private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderhService)
+        public OrderController(IOrderService orderhService, IHubContext<OrderHub> hubContext)
         {
             _orderService = orderhService;
+            _hubContext = hubContext;
         }
 
         /// <summary>
@@ -23,8 +26,8 @@ namespace WebApi.Controllers
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            var list = await _orderService.GetAll();
-            return Ok(list);
+            var list = await _orderService.GetAllOrder();
+            return Ok(list.OrderBy(x => x.CreatedAt));
         }
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace WebApi.Controllers
             var result = await _orderService.Create(req);
             if (result == 0)
                 return BadRequest();
-
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Có đơn hàng mới!");
             return Ok();
         }
 

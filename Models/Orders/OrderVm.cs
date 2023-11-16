@@ -20,5 +20,7 @@ namespace Models.Orders
         public int Subtotal { get; set; }
         public int Total { get; set; }
         public int Discount { get; set; }
+        public DateTime CompletedAt { get; set; }
+        public int TimeToReceive { get; set; }
     }
 }

@@ -12,7 +12,11 @@ namespace Application.Orders
 
         Task<int> Delete(string id);
 
-        Task<List<OrderVm>> GetAll();
+        Task<List<OrderVm>> GetAllOrder();
+
+        Task<List<OrderVm>> GetAllBooking();
+
+        Task<List<OrderVm>> GetCurrentBooking();
 
         Task<OrderVm> GetById(string id);
 

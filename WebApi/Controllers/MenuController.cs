@@ -26,6 +26,16 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Gets the list of all menus have active status is true.
+        /// </summary>
+        [HttpGet("getAllAvailable")]
+        public async Task<IActionResult> GetAllAvailable()
+        {
+            var dish = await _menuService.GetAllAvailable();
+            return Ok(dish);
+        }
+
+        /// <summary>
         /// Get the menu specified by Id
         /// </summary>
         [HttpGet("getById/{id}")]

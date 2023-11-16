@@ -9,6 +9,7 @@ using Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Utilities.Constants;
 
 namespace WebApi
@@ -26,7 +27,8 @@ namespace WebApi
         {
             services.AddDbContext<UOrderDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString(SystemConstants.MainConnectionString)));
 
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson().AddJsonOptions(
+                options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -42,6 +44,18 @@ namespace WebApi
                 c.EnableAnnotations();
             });
             services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
+            services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigins",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000") // Thêm origin của ứng dụng ReactJS
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials();
+                    });
+            });
 
             services.AddTransient<IDishService, DishService>();
             services.AddTransient<IMediaService, MediaService>();
@@ -55,17 +69,19 @@ namespace WebApi
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
             //if (env.IsDevelopment())
-            //{
-            app.UseCors(builder => builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-     .AllowAnyHeader());
+
+            app.UseRouting();
+            app.UseCors("AllowSpecificOrigins");
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<OrderHub>("/bookingHub");
+                endpoints.MapControllers();
+            });
             //}
             app.UseHttpsRedirection();
             app.MapControllers();
-            app.UseRouting();
             app.Run();
         }
     }

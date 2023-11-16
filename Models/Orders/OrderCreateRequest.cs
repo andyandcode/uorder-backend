@@ -39,5 +39,8 @@ namespace Models.Orders
 
         [Required]
         public List<OrderDetailsCreateRequest> OrderDetails { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public DateTime CompletedAt { get; set; }
     }
 }

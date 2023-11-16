@@ -82,6 +82,7 @@ namespace Application.Tables
 
             var item = new TableVm()
             {
+                Key = target.Id,
                 Id = target.Id,
                 Name = target.Name,
                 IsActive = target.IsActive,

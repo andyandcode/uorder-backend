@@ -12,6 +12,8 @@ namespace Application.Menus
 
         Task<List<MenuVm>> GetAll();
 
+        Task<List<MenuVm>> GetAllAvailable();
+
         Task<MenuVm> GetById(string id);
     }
 }

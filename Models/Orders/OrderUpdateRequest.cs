@@ -29,5 +29,8 @@ namespace Models.Orders
 
         [Required]
         public OrderType OrderType { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public DateTime CompletedAt { get; set; }
     }
 }
