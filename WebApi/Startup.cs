@@ -1,4 +1,5 @@
-﻿using Application.AutoMapper;
+﻿using Application.ActiveLogs;
+using Application.AutoMapper;
 using Application.Dishes;
 using Application.Medias;
 using Application.Menus;
@@ -63,6 +64,7 @@ namespace WebApi
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ISystemSettingService, SystemSettingService>();
             services.AddTransient<ITableService, TableService>();
+            services.AddTransient<IActiveLogService, ActiveLogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
