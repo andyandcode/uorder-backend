@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Microsoft.AspNetCore.JsonPatch;
+using Models.Analystic;
 using Models.Orders;
 
 namespace Application.Orders
@@ -23,5 +24,11 @@ namespace Application.Orders
         Task<OrderVm> GetReccentlyOrder(string id);
 
         Task<int> UpdateOrderStatus(string id, JsonPatchDocument<Order> patchDoc);
+
+        Task<List<RevenueVm>> GetRevenue();
+
+        Task<List<TopSellersVm>> GetTopSellers();
+
+        Task<CountManagementVm> GetCountManagement();
     }
 }

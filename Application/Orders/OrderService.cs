@@ -6,6 +6,7 @@ using Data.Entities;
 using Data.Enums;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using Models.Analystic;
 using Models.OrderDetails;
 using Models.Orders;
 
@@ -346,6 +347,37 @@ namespace Application.Orders
             }
 
             return minIndex;
+        }
+
+        public async Task<List<RevenueVm>> GetRevenue()
+        {
+            var result = await _context.Orders.Where(x => x.OrderStatus == OrderStatus.Completed).GroupBy(x => x.CreatedAt.Date).Select(x => new RevenueVm() { Date = x.Key.ToString("MM/dd/yyyy"), Total = x.Sum(o => o.Total) }).ToListAsync();
+            return result;
+        }
+
+        public async Task<List<TopSellersVm>> GetTopSellers()
+        {
+            var successfulOrders = await _context.Orders.Include(x => x.OrderDetails).ThenInclude(d => d.Dish).Where(x => x.OrderStatus == OrderStatus.Completed).ToListAsync();
+
+            var result = successfulOrders.SelectMany(x => x.OrderDetails).GroupBy(x => new { x.Dish.Name, MonthYear = new DateTime(x.Order.CreatedAt.Year, x.Order.CreatedAt.Month, 1) }).Select(g => new TopSellersVm
+            {
+                Name = g.Key.Name,
+                Time = g.Key.MonthYear.ToString("MM-yyyy"),
+                Total = g.Sum(od => od.Amount)
+            }).ToList();
+
+            return result;
+        }
+
+        public async Task<CountManagementVm> GetCountManagement()
+        {
+            var countDish = await _context.Dishes.CountAsync();
+            var countMenu = await _context.Menus.CountAsync();
+            var countTable = await _context.Tables.CountAsync();
+            var countRevenue = await _context.Orders.Where(x => x.OrderStatus == OrderStatus.Completed).SumAsync(x => x.Total);
+            var countOrderCompleted = await _context.Orders.Where(x => x.OrderStatus == OrderStatus.Completed).CountAsync();
+
+            return new CountManagementVm() { Dishes = countDish, Menus = countMenu, Tables = countTable, Revenue = countRevenue, OrderCompleted = countOrderCompleted };
         }
     }
 }
