@@ -28,11 +28,31 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetById(string id)
         {
             var table = await _tableService.GetById(id);
+            var order = await _orderService.GetReccentlyOrder(id);
             var menus = await _menuService.GetAllAvailable();
             if (table == null)
                 return BadRequest();
+            if (order == null)
+            {
+                return Ok(new { table, menus });
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
 
-            return Ok(new { table, menus });
+        /// <summary>
+        /// Get infomation of booking when re-scan qr code
+        /// </summary>
+        [HttpGet("/booking/tracker/{id}")]
+        public async Task<IActionResult> TrackBooking(string id)
+        {
+            var order = await _orderService.GetReccentlyOrder(id);
+            if (order == null)
+                return BadRequest();
+
+            return Ok(order);
         }
 
         /// <summary>

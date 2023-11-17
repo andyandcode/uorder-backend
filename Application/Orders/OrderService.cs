@@ -218,6 +218,7 @@ namespace Application.Orders
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
                 CompletedAt = p.CompletedAt,
+                TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -230,6 +231,41 @@ namespace Application.Orders
                     DishName = i.DishName,
                 }).ToList(),
             }).Where(package => package.Id == id).FirstOrDefaultAsync();
+
+            return target;
+        }
+
+        public async Task<OrderVm> GetReccentlyOrder(string id)
+        {
+            var target = await _context.Orders.Include(one => one.OrderDetails).Where(x => x.OrderStatus == OrderStatus.Ordered || x.OrderStatus == OrderStatus.ToReceive).Select(p => new OrderVm()
+            {
+                Id = p.Id,
+                Total = p.Total,
+                Note = p.Note,
+                TableId = p.TableId,
+                TableName = p.Table.Name,
+                OrderStatus = p.OrderStatus,
+                OrderStatusKey = p.OrderStatus.ToString().ToLower(),
+                PaymentStatus = p.PaymentStatus,
+                PaymentStatusKey = p.PaymentStatus.ToString().ToLower(),
+                CreatedAt = p.CreatedAt,
+                OrderType = p.OrderType,
+                Subtotal = p.Subtotal,
+                Discount = p.Discount,
+                CompletedAt = p.CompletedAt,
+                TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
+                OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
+                {
+                    Key = i.DishId,
+                    OrderId = i.OrderId,
+                    DishId = i.DishId,
+                    Qty = i.Qty,
+                    UnitPrice = i.UnitPrice,
+                    Amount = i.Amount,
+                    DishNote = i.DishNote,
+                    DishName = i.DishName,
+                }).ToList(),
+            }).Where(package => package.TableId == id).FirstOrDefaultAsync();
 
             return target;
         }

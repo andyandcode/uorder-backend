@@ -96,6 +96,7 @@ namespace WebApi.Controllers
             var result = await _orderService.UpdateOrderStatus(id, patchDoc);
             if (result == null)
                 return BadRequest();
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Đơn hàng vừa được cập nhập!");
             return Ok();
         }
     }

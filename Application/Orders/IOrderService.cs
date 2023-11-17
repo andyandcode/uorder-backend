@@ -20,6 +20,8 @@ namespace Application.Orders
 
         Task<OrderVm> GetById(string id);
 
+        Task<OrderVm> GetReccentlyOrder(string id);
+
         Task<int> UpdateOrderStatus(string id, JsonPatchDocument<Order> patchDoc);
     }
 }
