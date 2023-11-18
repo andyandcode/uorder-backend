@@ -1,4 +1,5 @@
-﻿using Application.Dishes;
+﻿using Application.ActiveLogs;
+using Application.Dishes;
 using Application.SystemSettings;
 using AutoMapper;
 using Data.EF;
@@ -6,6 +7,7 @@ using Data.Entities;
 using Data.Enums;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
+using Models.ActiveLogs;
 using Models.Analystic;
 using Models.OrderDetails;
 using Models.Orders;
@@ -18,21 +20,22 @@ namespace Application.Orders
         private readonly IDishService _dishService;
         private readonly ISystemSettingService _systemSettingService;
         private readonly IMapper _mapper;
+        private readonly IActiveLogService _activeLogService;
 
-        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService)
+        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IActiveLogService activeLogService)
         {
             _context = dbContext;
             _dishService = dishService;
             _mapper = mapper;
             _systemSettingService = systemSettingService;
+            _activeLogService = activeLogService;
         }
 
         public async Task<int> Create(OrderCreateRequest req)
         {
-            var id = req.Id;
             var item = new Order()
             {
-                Id = id,
+                Id = req.Id,
                 Total = req.Total,
                 Note = req.Note,
                 TableId = req.TableId,
@@ -49,7 +52,7 @@ namespace Application.Orders
                 OrderDetail connect = new OrderDetail()
                 {
                     DishName = _dishService.GetById(child.DishId).Result.Name,
-                    OrderId = id,
+                    OrderId = req.Id,
                     DishId = child.DishId,
                     Qty = child.Qty,
                     Amount = child.Amount,
@@ -59,6 +62,16 @@ namespace Application.Orders
                 _context.OrderDetails.Add(connect);
             }
             _context.Add(item);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = req.Id,
+                Timestamp = req.CreatedAt,
+                EntityType = EntityType.Order,
+                ActiveLogActionType = ActiveLogActionType.Create,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -76,6 +89,16 @@ namespace Application.Orders
                 OrderType = req.OrderType
             };
             _context.Update(item);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = req.Id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Order,
+                ActiveLogActionType = ActiveLogActionType.Update,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -85,6 +108,16 @@ namespace Application.Orders
             var userDto = _mapper.Map<Order>(stockItem);
             patchDoc.ApplyTo(userDto);
             _context.Update(userDto);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = stockItem.Id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Order,
+                ActiveLogActionType = ActiveLogActionType.UpdateStatus,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -95,6 +128,15 @@ namespace Application.Orders
                 return 0;
 
             _context.Orders.Remove(item);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Order,
+                ActiveLogActionType = ActiveLogActionType.Delete,
+            };
+            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }

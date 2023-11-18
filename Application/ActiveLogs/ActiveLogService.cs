@@ -15,9 +15,9 @@ namespace Application.ActiveLogs
             _context = dbContext;
         }
 
-        public async Task<int> CreateActiveLog(ActiveLogCreateRequest req)
+        public async Task CreateActiveLog(ActiveLogCreateRequest req)
         {
-            var item = new ActiveLog()
+            var item = new ActiveLog
             {
                 Id = req.Id,
                 EntityId = req.EntityId,
@@ -25,8 +25,8 @@ namespace Application.ActiveLogs
                 EntityType = req.EntityType,
                 ActiveLogActionType = req.ActiveLogActionType,
             };
-            _context.Add(item);
-            return await _context.SaveChangesAsync();
+            _context.ActiveLogs.Add(item);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<ActiveLogVm>> GetActiveLogByEntityId(string id)

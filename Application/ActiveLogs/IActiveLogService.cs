@@ -5,7 +5,7 @@ namespace Application.ActiveLogs
 {
     public interface IActiveLogService
     {
-        Task<int> CreateActiveLog(ActiveLogCreateRequest req);
+        Task CreateActiveLog(ActiveLogCreateRequest req);
 
         Task<List<ActiveLogVm>> GetActiveLogByEntityId(string id);
 

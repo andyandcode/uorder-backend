@@ -2,6 +2,6 @@
 {
     public enum ActiveLogActionType
     {
-        Add, Update, UpdateStatus, Delete
+        Create, Update, UpdateStatus, Delete
     }
 }
