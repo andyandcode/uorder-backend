@@ -1,9 +1,11 @@
 ﻿using Application.Tables;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Tables;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("table")]
     public class TableController : Controller
@@ -18,6 +20,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all tables.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -28,6 +31,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Get the table specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -40,6 +44,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a new table.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpPost("post")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] TableCreateRequest req)
@@ -57,6 +62,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Delete the table specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -69,6 +75,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update the table specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpPut("put/{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromForm] TableUpdateRequest req)

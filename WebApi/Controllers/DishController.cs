@@ -1,9 +1,11 @@
 ﻿using Application.Dishes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dishes;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("dish")]
     public class DishController : ControllerBase
@@ -18,6 +20,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all dishes.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
@@ -28,6 +31,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Get the dish specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -40,6 +44,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a new dish.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpPost("post")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] DishCreateRequest req)
@@ -57,6 +62,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Delete the dish specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -69,6 +75,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update the dish specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpPut("put/{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromForm] DishUpdateRequest req)

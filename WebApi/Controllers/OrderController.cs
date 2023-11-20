@@ -1,5 +1,6 @@
 ﻿using Application.Orders;
 using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -7,6 +8,7 @@ using Models.Orders;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("order")]
     public class OrderController : Controller
@@ -23,6 +25,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all orders.
         /// </summary>
+        [Authorize(Roles = "admin,staff")]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -33,6 +36,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Get the order specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,staff")]
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -45,6 +49,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a new order.
         /// </summary>
+        [Authorize(Roles = "admin,staff")]
         [HttpPost("post")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] OrderCreateRequest req)
@@ -62,6 +67,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Delete the order specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,staff")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -74,6 +80,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update the order specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,staff")]
         [HttpPut("put/{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromForm] OrderUpdateRequest req)
@@ -90,6 +97,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update the order status specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,staff")]
         [HttpPatch("patch/{id}")]
         public async Task<IActionResult> UpdateOrderStatus(string id, [FromBody] JsonPatchDocument<Order> patchDoc)
         {

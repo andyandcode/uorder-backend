@@ -2,6 +2,7 @@
 using Application.Orders;
 using Application.Tables;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Models.Orders;
 
 namespace WebApi.Controllers
@@ -10,15 +11,17 @@ namespace WebApi.Controllers
     [Route("booking")]
     public class BookingController : Controller
     {
+        private readonly IHubContext<OrderHub> _hubContext;
         private readonly IMenuService _menuService;
         private readonly ITableService _tableService;
         private readonly IOrderService _orderService;
 
-        public BookingController(IMenuService menuService, ITableService tableService, IOrderService orderService)
+        public BookingController(IMenuService menuService, ITableService tableService, IOrderService orderService, IHubContext<OrderHub> hubContext)
         {
             _menuService = menuService;
             _tableService = tableService;
             _orderService = orderService;
+            _hubContext = hubContext;
         }
 
         /// <summary>
@@ -62,9 +65,13 @@ namespace WebApi.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> PlaceOrder([FromForm] OrderCreateRequest req)
         {
-            //var result = await _menuService.GetById(id);
-            //if (result == null)
-            //    return BadRequest();
+            if (!ModelState.IsValid)
+                return BadRequest();
+
+            var result = await _orderService.Create(req);
+            if (result == 0)
+                return BadRequest();
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Có đơn hàng mới!");
             return Ok();
         }
 

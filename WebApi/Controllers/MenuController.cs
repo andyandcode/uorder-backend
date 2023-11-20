@@ -1,9 +1,11 @@
 ﻿using Application.Menus;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.Menus;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("menu")]
     public class MenuController : Controller
@@ -18,6 +20,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all menus.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -28,6 +31,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all menus have active status is true.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getAllAvailable")]
         public async Task<IActionResult> GetAllAvailable()
         {
@@ -38,6 +42,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Get the menu specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpGet("getById/{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -50,6 +55,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a new menu.
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpPost("post")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Create([FromForm] MenuCreateRequest req)
@@ -67,6 +73,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Delete the menu specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
@@ -79,6 +86,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update the menu specified by Id
         /// </summary>
+        [Authorize(Roles = "admin,creator")]
         [HttpPut("put/{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromForm] MenuUpdateRequest req)

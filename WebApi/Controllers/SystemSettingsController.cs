@@ -1,9 +1,11 @@
 ﻿using Application.SystemSettings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.SystemSettings;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("systemSettings")]
     public class SystemSettingsController : Controller
@@ -18,6 +20,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all settings.
         /// </summary>
+        [Authorize(Roles = "admin")]
         [HttpGet("getSettings")]
         public async Task<IActionResult> GetSettings()
         {
@@ -28,6 +31,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Update the setting specified by Id
         /// </summary>
+        [Authorize(Roles = "admin")]
         [HttpPut("put/{id}")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Update([FromRoute] string id, [FromForm] SystemSettingUpdateRequest req)

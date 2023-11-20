@@ -4,6 +4,7 @@ using Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    partial class UOrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231118153614_initial28")]
+    partial class initial28
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,9 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("ForcedPasswordReset")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -41,10 +47,6 @@ namespace Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -53,18 +55,16 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("Accounts", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "110116-191123-119936",
-                            CreatedAt = new DateTime(2023, 11, 19, 19, 36, 52, 390, DateTimeKind.Local).AddTicks(7831),
+                            Id = "1",
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ForcedPasswordReset = true,
                             IsActive = true,
-                            Password = "$2a$11$/1dsri0vTQWM2VAY80fYEu01x7OOMNS6dq2tDl7rTQ4vFfSbWfo1m",
-                            RoleId = "108101-191123-119776",
+                            Password = "admin",
                             Username = "admin"
                         });
                 });
@@ -103,7 +103,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 19, 19, 36, 52, 108, DateTimeKind.Local).AddTicks(1425));
+                        .HasDefaultValue(new DateTime(2023, 11, 18, 22, 36, 13, 997, DateTimeKind.Local).AddTicks(2807));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -174,7 +174,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 19, 19, 36, 52, 109, DateTimeKind.Local).AddTicks(7832));
+                        .HasDefaultValue(new DateTime(2023, 11, 18, 22, 36, 14, 0, DateTimeKind.Local).AddTicks(9744));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -198,7 +198,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 19, 19, 36, 52, 110, DateTimeKind.Local).AddTicks(977));
+                        .HasDefaultValue(new DateTime(2023, 11, 18, 22, 36, 14, 1, DateTimeKind.Local).AddTicks(7789));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -294,43 +294,6 @@ namespace Data.Migrations
                     b.ToTable("OrderDetails", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.Role", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "108101-191123-119776",
-                            Level = 1,
-                            Name = "admin"
-                        },
-                        new
-                        {
-                            Id = "108101-191123-908710",
-                            Level = 2,
-                            Name = "creator"
-                        },
-                        new
-                        {
-                            Id = "108101-191123-908819",
-                            Level = 3,
-                            Name = "staff"
-                        });
-                });
-
             modelBuilder.Entity("Data.Entities.SystemSetting", b =>
                 {
                     b.Property<string>("Id")
@@ -385,17 +348,6 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tables", (string)null);
-                });
-
-            modelBuilder.Entity("Data.Entities.Account", b =>
-                {
-                    b.HasOne("Data.Entities.Role", "Roles")
-                        .WithMany("Accounts")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("Data.Entities.DishMedia", b =>
@@ -487,11 +439,6 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("Data.Entities.Role", b =>
-                {
-                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("Data.Entities.Table", b =>

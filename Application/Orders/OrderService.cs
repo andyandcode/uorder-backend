@@ -33,9 +33,10 @@ namespace Application.Orders
 
         public async Task<int> Create(OrderCreateRequest req)
         {
-            var item = new Order()
+            var id = req.Id;
+            var item = new Order
             {
-                Id = req.Id,
+                Id = id,
                 Total = req.Total,
                 Note = req.Note,
                 TableId = req.TableId,
@@ -49,10 +50,10 @@ namespace Application.Orders
             };
             foreach (var child in req.OrderDetails)
             {
-                OrderDetail connect = new OrderDetail()
+                var connect = new OrderDetail
                 {
                     DishName = _dishService.GetById(child.DishId).Result.Name,
-                    OrderId = req.Id,
+                    OrderId = id,
                     DishId = child.DishId,
                     Qty = child.Qty,
                     Amount = child.Amount,
@@ -65,7 +66,7 @@ namespace Application.Orders
 
             var log = new ActiveLogCreateRequest
             {
-                EntityId = req.Id,
+                EntityId = id,
                 Timestamp = req.CreatedAt,
                 EntityType = EntityType.Order,
                 ActiveLogActionType = ActiveLogActionType.Create,
@@ -77,7 +78,7 @@ namespace Application.Orders
 
         public async Task<int> Update(OrderUpdateRequest req)
         {
-            var item = new Order()
+            var item = new Order
             {
                 Id = req.Id,
                 Total = req.Total,

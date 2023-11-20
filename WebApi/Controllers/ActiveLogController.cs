@@ -1,5 +1,6 @@
 ﻿using Application.ActiveLogs;
 using Data.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -18,6 +19,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Create list active log by entity id.
         /// </summary>
+        [Authorize(Roles = "admin")]
         [HttpGet("getByEntityId/{id}")]
         public async Task<IActionResult> GetByEntityId(string id)
         {
@@ -28,6 +30,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Create list active log by entity type.
         /// </summary>
+        [Authorize(Roles = "admin")]
         [HttpGet("getByEntityType/{type}")]
         public async Task<IActionResult> GetByEntityId(EntityType type)
         {
