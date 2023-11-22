@@ -11,8 +11,6 @@ namespace Data.Configurations
             builder.ToTable("Orders");
             builder.HasKey(x => x.Id);
             builder.Property(x => x.CreatedAt).IsRequired();
-            builder.Property(x => x.Note).HasMaxLength(500);
-            builder.Property(x => x.TableId).IsRequired(false);
             builder.Property(x => x.Total).IsRequired();
             builder.Property(x => x.OrderStatus).IsRequired();
             builder.Property(x => x.PaymentStatus).IsRequired();

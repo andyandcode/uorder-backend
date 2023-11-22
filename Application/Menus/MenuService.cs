@@ -1,5 +1,10 @@
-﻿using Data.EF;
+﻿using Application.ActiveLogs;
+using Data.EF;
 using Data.Entities;
+using Data.Enums;
+using Microsoft.EntityFrameworkCore;
+using Models.ActiveLogs;
+using Models.Dishes;
 using Models.Menus;
 
 namespace Application.Menus
@@ -7,29 +12,52 @@ namespace Application.Menus
     public class MenuService : IMenuService
     {
         private readonly UOrderDbContext _context;
+        private readonly IActiveLogService _activeLogService;
 
-        public MenuService(UOrderDbContext dbContext)
+        public MenuService(UOrderDbContext dbContext, IActiveLogService activeLogService)
         {
             _context = dbContext;
+            _activeLogService = activeLogService;
         }
 
         public async Task<int> Create(MenuCreateRequest req)
         {
-            var item = new Menu()
+            var id = req.Id;
+            var item = new Menu
             {
-                Id = req.Id,
+                Id = id,
                 Name = req.Name,
                 IsActive = req.IsActive,
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
             };
+
             _context.Add(item);
+
+            if (req.Dishes != null)
+            {
+                foreach (var child in req.Dishes)
+                {
+                    var connect = new DishMenu { DishId = child, MenuId = id };
+                    _context.DishMenus.Add(connect);
+                }
+            }
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = req.Id,
+                Timestamp = req.CreatedAt,
+                EntityType = EntityType.Menu,
+                ActiveLogActionType = ActiveLogActionType.Create,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(MenuUpdateRequest req)
         {
-            var item = new Menu()
+            var item = new Menu
             {
                 Id = req.Id,
                 Name = req.Name,
@@ -37,7 +65,28 @@ namespace Application.Menus
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
             };
+
+            var assets = _context.DishMenus.Where(a => a.MenuId == req.Id).ToList();
+            if (assets != null)
+            {
+                _context.DishMenus.RemoveRange(assets);
+            }
+
+            foreach (var child in req.Dishes)
+            {
+                var connect = new DishMenu { DishId = child, MenuId = req.Id };
+                _context.DishMenus.Add(connect);
+            }
             _context.Update(item);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = req.Id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Menu,
+                ActiveLogActionType = ActiveLogActionType.Update,
+            };
+            await _activeLogService.CreateActiveLog(log);
             return await _context.SaveChangesAsync();
         }
 
@@ -49,19 +98,72 @@ namespace Application.Menus
 
             _context.Menus.Remove(item);
 
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Menu,
+                ActiveLogActionType = ActiveLogActionType.Delete,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
-        public List<MenuVm> GetAll()
+        public async Task<List<MenuVm>> GetAll()
         {
-            return _context.Menus.ToList().Select(p => new MenuVm()
+            var result = await _context.Menus.Include(one => one.Dishes).ThenInclude(dishes => dishes.Dish).Select(p => new MenuVm
             {
+                Key = p.Id,
                 Id = p.Id,
                 Name = p.Name,
                 Desc = p.Desc,
                 IsActive = p.IsActive,
                 CreatedAt = p.CreatedAt,
-            }).ToList();
+                Dishes = p.Dishes.ToList().Select(i => new DishVm
+                {
+                    Key = i.Dish.Id,
+                    Id = i.Dish.Id,
+                    Name = i.Dish.Name,
+                    Desc = i.Dish.Desc,
+                    Price = i.Dish.Price,
+                    IsActive = i.Dish.IsActive,
+                    CompletionTime = i.Dish.CompletionTime,
+                    QtyPerDay = i.Dish.QtyPerDay,
+                    Type = i.Dish.Type,
+                    CreatedAt = i.Dish.CreatedAt,
+                    TypeName = i.Dish.Type.ToString(),
+                }).ToList(),
+            }).ToListAsync();
+            return result;
+        }
+
+        public async Task<List<MenuVm>> GetAllAvailable()
+        {
+            var result = await _context.Menus.Include(one => one.Dishes).ThenInclude(dishes => dishes.Dish).Where(menu => menu.IsActive == true).Select(p => new MenuVm
+            {
+                Key = p.Id,
+                Id = p.Id,
+                Name = p.Name,
+                Desc = p.Desc,
+                IsActive = p.IsActive,
+                CreatedAt = p.CreatedAt,
+                Dishes = p.Dishes.ToList().Where(dish => dish.Dish.IsActive == true).Select(i => new DishVm
+                {
+                    Key = i.Dish.Id,
+                    Id = i.Dish.Id,
+                    Name = i.Dish.Name,
+                    Desc = i.Dish.Desc,
+                    Price = i.Dish.Price,
+                    IsActive = i.Dish.IsActive,
+                    CompletionTime = i.Dish.CompletionTime,
+                    QtyPerDay = i.Dish.QtyPerDay,
+                    Type = i.Dish.Type,
+                    CreatedAt = i.Dish.CreatedAt,
+                    TypeName = i.Dish.Type.ToString(),
+                }).ToList(),
+            }).ToListAsync();
+            return result;
         }
 
         public async Task<MenuVm> GetById(string id)
@@ -70,7 +172,7 @@ namespace Application.Menus
             if (target == null)
                 return null;
 
-            var item = new MenuVm()
+            var item = new MenuVm
             {
                 Id = target.Id,
                 Name = target.Name,

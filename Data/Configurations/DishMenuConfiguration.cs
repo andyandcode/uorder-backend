@@ -11,8 +11,8 @@ namespace Data.Configurations
             builder.ToTable("DishOfMenu");
             builder.HasKey(x => new { x.MenuId, x.DishId });
 
-            builder.HasOne(x => x.Menu).WithMany(x => x.DishMenus).HasForeignKey(x => x.MenuId).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(x => x.Dish).WithMany(x => x.DishMenus).HasForeignKey(x => x.DishId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Menu).WithMany(x => x.Dishes).HasForeignKey(x => x.MenuId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(x => x.Dish).WithMany(x => x.Menus).HasForeignKey(x => x.DishId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

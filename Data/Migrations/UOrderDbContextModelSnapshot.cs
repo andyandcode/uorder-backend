@@ -27,6 +27,9 @@ namespace Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -38,6 +41,10 @@ namespace Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -46,16 +53,43 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Accounts", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "110116-211123-309816",
+                            CreatedAt = new DateTime(2023, 11, 21, 20, 12, 24, 76, DateTimeKind.Local).AddTicks(4793),
                             IsActive = true,
-                            Password = "admin",
+                            Password = "$2a$11$u5Rxh6/luyczjC949k9j7.2XzTbj.dYc13YrxVTH5N.m.Yby64eaW",
+                            RoleId = "108101-211123-309547",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("Data.Entities.ActiveLog", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ActiveLogActionType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActiveLog", (string)null);
                 });
 
             modelBuilder.Entity("Data.Entities.Dish", b =>
@@ -69,7 +103,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 59, 10, 493, DateTimeKind.Local).AddTicks(2010));
+                        .HasDefaultValue(new DateTime(2023, 11, 21, 20, 12, 23, 824, DateTimeKind.Local).AddTicks(4868));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -89,7 +123,7 @@ namespace Data.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<int>("QtyPerDate")
+                    b.Property<int>("QtyPerDay")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(100);
@@ -140,7 +174,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 59, 10, 494, DateTimeKind.Local).AddTicks(2545));
+                        .HasDefaultValue(new DateTime(2023, 11, 21, 20, 12, 23, 827, DateTimeKind.Local).AddTicks(3319));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -164,7 +198,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 6, 18, 59, 10, 494, DateTimeKind.Local).AddTicks(4114));
+                        .HasDefaultValue(new DateTime(2023, 11, 21, 20, 12, 23, 827, DateTimeKind.Local).AddTicks(7704));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -191,18 +225,28 @@ namespace Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Discount")
+                        .HasColumnType("int");
+
                     b.Property<string>("Note")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("OrderStatus")
                         .HasColumnType("int");
 
+                    b.Property<int>("OrderType")
+                        .HasColumnType("int");
+
                     b.Property<int>("PaymentStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Subtotal")
                         .HasColumnType("int");
 
                     b.Property<string>("TableId")
@@ -229,8 +273,11 @@ namespace Data.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<string>("Note")
+                    b.Property<string>("DishName")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DishNote")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -245,6 +292,43 @@ namespace Data.Migrations
                     b.HasIndex("DishId");
 
                     b.ToTable("OrderDetails", (string)null);
+                });
+
+            modelBuilder.Entity("Data.Entities.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "108101-211123-309547",
+                            Level = 1,
+                            Name = "admin"
+                        },
+                        new
+                        {
+                            Id = "108101-211123-765717",
+                            Level = 2,
+                            Name = "creator"
+                        },
+                        new
+                        {
+                            Id = "108101-211123-765819",
+                            Level = 3,
+                            Name = "staff"
+                        });
                 });
 
             modelBuilder.Entity("Data.Entities.SystemSetting", b =>
@@ -282,10 +366,6 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Data")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Desc")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -305,6 +385,17 @@ namespace Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tables", (string)null);
+                });
+
+            modelBuilder.Entity("Data.Entities.Account", b =>
+                {
+                    b.HasOne("Data.Entities.Role", "Roles")
+                        .WithMany("Accounts")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("Data.Entities.DishMedia", b =>
@@ -329,13 +420,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.DishMenu", b =>
                 {
                     b.HasOne("Data.Entities.Dish", "Dish")
-                        .WithMany("DishMenus")
+                        .WithMany("Menus")
                         .HasForeignKey("DishId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Data.Entities.Menu", "Menu")
-                        .WithMany("DishMenus")
+                        .WithMany("Dishes")
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -350,8 +441,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.Table", "Table")
                         .WithMany("Orders")
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Table");
                 });
@@ -379,7 +469,7 @@ namespace Data.Migrations
                 {
                     b.Navigation("DishMedias");
 
-                    b.Navigation("DishMenus");
+                    b.Navigation("Menus");
 
                     b.Navigation("OrderDetails");
                 });
@@ -391,12 +481,17 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
-                    b.Navigation("DishMenus");
+                    b.Navigation("Dishes");
                 });
 
             modelBuilder.Entity("Data.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("Data.Entities.Role", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("Data.Entities.Table", b =>

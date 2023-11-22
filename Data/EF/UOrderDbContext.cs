@@ -23,6 +23,8 @@ namespace Data.EF
             modelBuilder.ApplyConfiguration(new OrderDetailConfiguration());
             modelBuilder.ApplyConfiguration(new SystemSettingConfiguration());
             modelBuilder.ApplyConfiguration(new TableConfiguration());
+            modelBuilder.ApplyConfiguration(new ActiveLogConfiguration());
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
             modelBuilder.Seed();
         }
@@ -37,5 +39,7 @@ namespace Data.EF
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<SystemSetting> SystemSettings { get; set; }
         public DbSet<Table> Tables { get; set; }
+        public DbSet<ActiveLog> ActiveLogs { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

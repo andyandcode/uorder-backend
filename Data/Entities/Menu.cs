@@ -7,6 +7,6 @@
         public string Desc { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
-        public List<DishMenu> DishMenus { get; set; }
+        public virtual ICollection<DishMenu> Dishes { get; set; }
     }
 }

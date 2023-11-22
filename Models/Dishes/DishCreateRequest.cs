@@ -28,7 +28,7 @@ namespace Models.Dishes
         public bool IsActive { get; set; }
 
         [Required]
-        public int QtyPerDate { get; set; }
+        public int QtyPerDay { get; set; }
 
         [Required]
         public DishType Type { get; set; }

@@ -13,5 +13,7 @@ namespace Application.Dishes
         List<DishVm> GetAll();
 
         Task<DishVm> GetById(string id);
+
+        List<DishVm> GetAllById(string id);
     }
 }

@@ -10,11 +10,11 @@ namespace Data.Entities
         public int Price { get; set; }
         public int CompletionTime { get; set; }
         public bool IsActive { get; set; }
-        public int QtyPerDate { get; set; }
+        public int QtyPerDay { get; set; }
         public DishType Type { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
         public List<DishMedia> DishMedias { get; set; }
-        public List<DishMenu> DishMenus { get; set; }
+        public virtual ICollection<DishMenu> Menus { get; set; }
     }
 }

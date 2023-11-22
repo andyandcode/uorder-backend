@@ -2,6 +2,6 @@
 {
     public enum GenerationType
     {
-        Account, Dish, Menu, Media, Order, SystemSetting, Table
+        Account, Dish, Menu, Media, Order, SystemSetting, Table, OrderDetails, ActiveLog, Role
     }
 }

@@ -1,4 +1,7 @@
-﻿using Models.Orders;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
+using Models.Analystic;
+using Models.Orders;
 
 namespace Application.Orders
 {
@@ -10,8 +13,22 @@ namespace Application.Orders
 
         Task<int> Delete(string id);
 
-        Task<List<OrderVm>> GetAll();
+        Task<List<OrderVm>> GetAllOrder();
+
+        Task<List<OrderVm>> GetAllBooking();
+
+        Task<List<OrderVm>> GetCurrentBooking();
 
         Task<OrderVm> GetById(string id);
+
+        Task<OrderVm> GetReccentlyOrder(string id);
+
+        Task<int> UpdateOrderStatus(string id, JsonPatchDocument<Order> patchDoc);
+
+        Task<List<RevenueVm>> GetRevenue();
+
+        Task<List<TopSellersVm>> GetTopSellers();
+
+        Task<CountManagementVm> GetCountManagement();
     }
 }

@@ -9,10 +9,8 @@ namespace Models.Dishes
         [SwaggerSchema(ReadOnly = true)]
         public string Id { get; set; }
 
-        [Required]
         public string Name { get; set; }
 
-        [Required]
         public string Desc { get; set; }
 
         [Required]
@@ -25,7 +23,7 @@ namespace Models.Dishes
         public bool IsActive { get; set; }
 
         [Required]
-        public int QtyPerDate { get; set; }
+        public int QtyPerDay { get; set; }
 
         [Required]
         public DishType Type { get; set; }

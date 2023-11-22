@@ -22,5 +22,7 @@ namespace Models.Menus
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt => DateTime.Now;
+
+        public List<string>? Dishes { get; set; }
     }
 }

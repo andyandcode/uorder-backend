@@ -19,5 +19,7 @@ namespace Models.Menus
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt { get; set; }
+
+        public virtual List<string> Dishes { get; set; }
     }
 }

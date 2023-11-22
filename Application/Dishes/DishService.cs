@@ -1,5 +1,8 @@
-﻿using Data.EF;
+﻿using Application.ActiveLogs;
+using Data.EF;
 using Data.Entities;
+using Data.Enums;
+using Models.ActiveLogs;
 using Models.Dishes;
 
 namespace Application.Dishes
@@ -7,33 +10,45 @@ namespace Application.Dishes
     public class DishService : IDishService
     {
         private readonly UOrderDbContext _context;
+        private readonly IActiveLogService _activeLogService;
 
-        public DishService(UOrderDbContext dbContext)
+        public DishService(UOrderDbContext dbContext, IActiveLogService activeLogService)
         {
             _context = dbContext;
+            _activeLogService = activeLogService;
         }
 
         public async Task<int> Create(DishCreateRequest req)
         {
-            var item = new Dish()
+            var item = new Dish
             {
                 Id = req.Id,
                 Name = req.Name,
                 IsActive = req.IsActive,
                 Desc = req.Desc,
-                Price = req.Price,
+                Price = Int32.Parse(string.Concat(req.Price.ToString().Where(char.IsDigit))),
                 CompletionTime = req.CompletionTime,
-                QtyPerDate = req.QtyPerDate,
+                QtyPerDay = req.QtyPerDay,
                 Type = req.Type,
                 CreatedAt = req.CreatedAt,
             };
             _context.Add(item);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = req.Id,
+                Timestamp = req.CreatedAt,
+                EntityType = EntityType.Dish,
+                ActiveLogActionType = ActiveLogActionType.Create,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(DishUpdateRequest req)
         {
-            var item = new Dish()
+            var item = new Dish
             {
                 Id = req.Id,
                 Name = req.Name,
@@ -41,11 +56,21 @@ namespace Application.Dishes
                 Desc = req.Desc,
                 Price = req.Price,
                 CompletionTime = req.CompletionTime,
-                QtyPerDate = req.QtyPerDate,
+                QtyPerDay = req.QtyPerDay,
                 Type = req.Type,
                 CreatedAt = req.CreatedAt,
             };
             _context.Update(item);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = req.Id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Dish,
+                ActiveLogActionType = ActiveLogActionType.Update,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -53,6 +78,16 @@ namespace Application.Dishes
         {
             var product = await _context.Dishes.FindAsync(id);
             _context.Dishes.Remove(product);
+
+            var log = new ActiveLogCreateRequest
+            {
+                EntityId = id,
+                Timestamp = DateTime.Now,
+                EntityType = EntityType.Dish,
+                ActiveLogActionType = ActiveLogActionType.Delete,
+            };
+            await _activeLogService.CreateActiveLog(log);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -60,13 +95,14 @@ namespace Application.Dishes
         {
             return _context.Dishes.ToList().Select(p => new DishVm()
             {
+                Key = p.Id,
                 Id = p.Id,
                 Name = p.Name,
                 Desc = p.Desc,
                 Price = p.Price,
                 IsActive = p.IsActive,
                 CompletionTime = p.CompletionTime,
-                QtyPerDate = p.QtyPerDate,
+                QtyPerDay = p.QtyPerDay,
                 Type = p.Type,
                 CreatedAt = p.CreatedAt,
                 TypeName = p.Type.ToString(),
@@ -87,12 +123,30 @@ namespace Application.Dishes
                 Desc = product.Desc,
                 Price = product.Price,
                 CompletionTime = product.CompletionTime,
-                QtyPerDate = product.QtyPerDate,
+                QtyPerDay = product.QtyPerDay,
                 Type = product.Type,
                 CreatedAt = product.CreatedAt,
             };
 
             return item;
+        }
+
+        public List<DishVm> GetAllById(string id)
+        {
+            return _context.Dishes.ToList().Where(s => s.Id == id).Select(p => new DishVm()
+            {
+                Key = p.Id,
+                Id = p.Id,
+                Name = p.Name,
+                Desc = p.Desc,
+                Price = p.Price,
+                IsActive = p.IsActive,
+                CompletionTime = p.CompletionTime,
+                QtyPerDay = p.QtyPerDay,
+                Type = p.Type,
+                CreatedAt = p.CreatedAt,
+                TypeName = p.Type.ToString(),
+            }).ToList();
         }
     }
 }

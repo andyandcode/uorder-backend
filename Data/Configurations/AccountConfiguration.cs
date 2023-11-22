@@ -13,6 +13,8 @@ namespace Data.Configurations
             builder.Property(x => x.Username).IsRequired().IsUnicode(false).HasMaxLength(100);
             builder.Property(x => x.Password).IsRequired().IsUnicode(false).HasMaxLength(100);
             builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
+
+            builder.HasOne(x => x.Roles).WithMany(x => x.Accounts).HasForeignKey(x => x.RoleId).OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
