@@ -33,7 +33,8 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("resetPassword/{id}")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCreateRequest req)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> ResetPassword([FromRoute] string id, [FromForm] ResetPasswordCreateRequest req)
         {
             var result = await _accountService.ResetPassword(req);
 

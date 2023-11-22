@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// Gets the list of all dishes.
         /// </summary>
-        [Authorize(Roles = "admin,creator")]
+        [Authorize(Roles = "admin,creator,staff")]
         [HttpGet("getAll")]
         public IActionResult GetAll()
         {
