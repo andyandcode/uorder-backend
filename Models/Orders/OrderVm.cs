@@ -22,5 +22,6 @@ namespace Models.Orders
         public int Discount { get; set; }
         public DateTime CompletedAt { get; set; }
         public int TimeToReceive { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
     }
 }

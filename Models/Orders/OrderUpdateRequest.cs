@@ -30,6 +30,9 @@ namespace Models.Orders
         [Required]
         public OrderType OrderType { get; set; }
 
+        [Required]
+        public PaymentMethod PaymentMethod { get; set; }
+
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CompletedAt { get; set; }
     }

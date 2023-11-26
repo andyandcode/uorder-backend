@@ -56,12 +56,11 @@ namespace WebApi.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest();
-
             var result = await _orderService.Create(req);
-            if (result == 0)
-                return BadRequest();
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Có đơn hàng mới!");
-            return Ok();
+            if (result == null)
+                return Ok();
+            return Ok(result);
         }
 
         /// <summary>

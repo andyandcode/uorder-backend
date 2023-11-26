@@ -38,6 +38,9 @@ namespace Models.Orders
         public OrderType OrderType { get; set; }
 
         [Required]
+        public PaymentMethod PaymentMethod { get; set; }
+
+        [Required]
         public List<OrderDetailsCreateRequest> OrderDetails { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]

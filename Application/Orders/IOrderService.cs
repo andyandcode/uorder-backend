@@ -7,7 +7,7 @@ namespace Application.Orders
 {
     public interface IOrderService
     {
-        Task<int> Create(OrderCreateRequest req);
+        Task<string> Create(OrderCreateRequest req);
 
         Task<int> Update(OrderUpdateRequest req);
 

@@ -1,5 +1,6 @@
 ﻿using Application.ActiveLogs;
 using Application.Dishes;
+using Application.Payment;
 using Application.SystemSettings;
 using AutoMapper;
 using Data.EF;
@@ -21,17 +22,19 @@ namespace Application.Orders
         private readonly ISystemSettingService _systemSettingService;
         private readonly IMapper _mapper;
         private readonly IActiveLogService _activeLogService;
+        private readonly IPaymentService _paymentService;
 
-        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IActiveLogService activeLogService)
+        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IActiveLogService activeLogService, IPaymentService paymentService)
         {
             _context = dbContext;
             _dishService = dishService;
             _mapper = mapper;
             _systemSettingService = systemSettingService;
             _activeLogService = activeLogService;
+            _paymentService = paymentService;
         }
 
-        public async Task<int> Create(OrderCreateRequest req)
+        public async Task<string> Create(OrderCreateRequest req)
         {
             var id = req.Id;
             var item = new Order
@@ -40,14 +43,16 @@ namespace Application.Orders
                 Total = req.Total,
                 Note = req.Note,
                 TableId = req.TableId,
-                OrderStatus = req.OrderStatus,
-                PaymentStatus = req.PaymentStatus,
+                OrderStatus = OrderStatus.Ordered,
+                PaymentStatus = PaymentStatus.Unpaid,
                 CreatedAt = req.CreatedAt,
                 OrderType = req.OrderType,
                 Subtotal = req.Subtotal,
                 Discount = req.Discount,
+                PaymentMethod = req.PaymentMethod,
                 CompletedAt = await OrderInQueue(req),
             };
+
             foreach (var child in req.OrderDetails)
             {
                 var connect = new OrderDetail
@@ -72,8 +77,13 @@ namespace Application.Orders
                 ActiveLogActionType = ActiveLogActionType.Create,
             };
             await _activeLogService.CreateActiveLog(log);
+            await _context.SaveChangesAsync();
 
-            return await _context.SaveChangesAsync();
+            if (req.PaymentMethod == PaymentMethod.Momo)
+            {
+                return _paymentService.VnPayPayment(req, id);
+            }
+            return null;
         }
 
         public async Task<int> Update(OrderUpdateRequest req)

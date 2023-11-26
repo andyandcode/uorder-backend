@@ -16,6 +16,7 @@ namespace Data.Entities
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public Table? Table { get; set; }
         public OrderType OrderType { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
         public DateTime CompletedAt { get; set; }
     }
 }

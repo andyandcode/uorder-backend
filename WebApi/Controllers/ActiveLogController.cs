@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("activeLog")]
     public class ActiveLogController : Controller

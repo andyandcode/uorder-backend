@@ -6,13 +6,17 @@ using Application.Jwt;
 using Application.Medias;
 using Application.Menus;
 using Application.Orders;
+using Application.Payment;
 using Application.SystemSettings;
 using Application.Tables;
 using Data.EF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -77,12 +81,13 @@ namespace WebApi
             services.AddSignalR();
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
+                options.AddPolicy("CorsPolicy",
                     builder =>
                     {
-                        builder.AllowAnyOrigin()
+                        builder.WithOrigins("http://localhost:3000")
                                .AllowAnyHeader()
-                               .AllowAnyMethod();
+                               .AllowAnyMethod()
+                               .AllowCredentials();
                     });
             });
 
@@ -104,6 +109,8 @@ namespace WebApi
                 };
             });
             services.AddAuthorization();
+            services.AddHttpContextAccessor();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<IDishService, DishService>();
             services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<IMenuService, MenuService>();
@@ -111,14 +118,16 @@ namespace WebApi
             services.AddTransient<ISystemSettingService, SystemSettingService>();
             services.AddTransient<ITableService, TableService>();
             services.AddTransient<IActiveLogService, ActiveLogService>();
-            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAccountService, Application.Accounts.AccountService>();
             services.AddTransient<IJwtService, JwtService>();
+            services.AddTransient<IPaymentService, PaymentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            app.UseCors();
+            StripeConfiguration.ApiKey = "sk_test_51OGK6rCiJmzbvwPesBddvpTBN3liP8clS0WxWYjgvAMGkuMe7xkqBmFPEThNB9gOGGkPZqXjAahnyJIMylMJiFhC00eTy4j0mS";
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
