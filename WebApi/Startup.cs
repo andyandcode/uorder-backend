@@ -2,13 +2,14 @@
 using Application.ActiveLogs;
 using Application.AutoMapper;
 using Application.Dishes;
+using Application.Files;
 using Application.Jwt;
-using Application.Medias;
 using Application.Menus;
 using Application.Orders;
 using Application.Payment;
 using Application.SystemSettings;
 using Application.Tables;
+using Azure.Storage.Blobs;
 using Data.EF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -112,7 +113,6 @@ namespace WebApi
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<IDishService, DishService>();
-            services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<IMenuService, MenuService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ISystemSettingService, SystemSettingService>();
@@ -121,6 +121,8 @@ namespace WebApi
             services.AddTransient<IAccountService, Application.Accounts.AccountService>();
             services.AddTransient<IJwtService, JwtService>();
             services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<IFileService, Application.Files.FileService>();
+            services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=uorderfile123;AccountKey=6zPn/Y6oku+KsZH+EZ6gFGDgZYJ0v1wPzrwaYQWAinAJfbRoQrmsVyZOhElOpZkMaqXTMAp+F1/r+AStEN5O4w==;EndpointSuffix=core.windows.net"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

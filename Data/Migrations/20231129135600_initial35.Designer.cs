@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    [Migration("20231111055555_initial17")]
-    partial class initial17
+    [Migration("20231129135600_initial35")]
+    partial class initial35
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,6 +30,9 @@ namespace Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -41,6 +44,10 @@ namespace Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -49,16 +56,43 @@ namespace Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Accounts", (string)null);
 
                     b.HasData(
                         new
                         {
-                            Id = "1",
+                            Id = "110116-291123-182992",
+                            CreatedAt = new DateTime(2023, 11, 29, 20, 56, 0, 696, DateTimeKind.Local).AddTicks(4619),
                             IsActive = true,
-                            Password = "admin",
+                            Password = "$2a$11$1b9B.fXTOFuwir5fg2I0GedsFZh.zxUD2xzFjTT6YwuUbP2ONQQDC",
+                            RoleId = "108101-291123-182839",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("Data.Entities.ActiveLog", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ActiveLogActionType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EntityId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EntityType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ActiveLog", (string)null);
                 });
 
             modelBuilder.Entity("Data.Entities.Dish", b =>
@@ -69,10 +103,13 @@ namespace Data.Migrations
                     b.Property<int>("CompletionTime")
                         .HasColumnType("int");
 
+                    b.Property<string>("Cover")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 11, 12, 55, 54, 824, DateTimeKind.Local).AddTicks(7174));
+                        .HasDefaultValue(new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(1646));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -105,21 +142,6 @@ namespace Data.Migrations
                     b.ToTable("Dishes", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.DishMedia", b =>
-                {
-                    b.Property<string>("MediaId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("DishId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("MediaId", "DishId");
-
-                    b.HasIndex("DishId");
-
-                    b.ToTable("DishOfMedia", (string)null);
-                });
-
             modelBuilder.Entity("Data.Entities.DishMenu", b =>
                 {
                     b.Property<string>("MenuId")
@@ -135,30 +157,6 @@ namespace Data.Migrations
                     b.ToTable("DishOfMenu", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.Media", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 11, 12, 55, 54, 827, DateTimeKind.Local).AddTicks(3887));
-
-                    b.Property<string>("Desc")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Medias", (string)null);
-                });
-
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.Property<string>("Id")
@@ -167,7 +165,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 11, 12, 55, 54, 827, DateTimeKind.Local).AddTicks(7255));
+                        .HasDefaultValue(new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(9672));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -194,6 +192,9 @@ namespace Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -209,6 +210,9 @@ namespace Data.Migrations
                     b.Property<int>("OrderType")
                         .HasColumnType("int");
 
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("int");
+
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
 
@@ -216,7 +220,6 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TableId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Total")
@@ -240,6 +243,10 @@ namespace Data.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
+                    b.Property<string>("DishName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("DishNote")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -255,6 +262,43 @@ namespace Data.Migrations
                     b.HasIndex("DishId");
 
                     b.ToTable("OrderDetails", (string)null);
+                });
+
+            modelBuilder.Entity("Data.Entities.Role", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "108101-291123-182839",
+                            Level = 1,
+                            Name = "admin"
+                        },
+                        new
+                        {
+                            Id = "108101-291123-965501",
+                            Level = 2,
+                            Name = "creator"
+                        },
+                        new
+                        {
+                            Id = "108101-291123-965630",
+                            Level = 3,
+                            Name = "staff"
+                        });
                 });
 
             modelBuilder.Entity("Data.Entities.SystemSetting", b =>
@@ -313,23 +357,15 @@ namespace Data.Migrations
                     b.ToTable("Tables", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.DishMedia", b =>
+            modelBuilder.Entity("Data.Entities.Account", b =>
                 {
-                    b.HasOne("Data.Entities.Dish", "Dish")
-                        .WithMany("DishMedias")
-                        .HasForeignKey("DishId")
+                    b.HasOne("Data.Entities.Role", "Roles")
+                        .WithMany("Accounts")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Data.Entities.Media", "Media")
-                        .WithMany("DishMedias")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dish");
-
-                    b.Navigation("Media");
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("Data.Entities.DishMenu", b =>
@@ -356,8 +392,7 @@ namespace Data.Migrations
                     b.HasOne("Data.Entities.Table", "Table")
                         .WithMany("Orders")
                         .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Table");
                 });
@@ -383,16 +418,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Dish", b =>
                 {
-                    b.Navigation("DishMedias");
-
                     b.Navigation("Menus");
 
                     b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("Data.Entities.Media", b =>
-                {
-                    b.Navigation("DishMedias");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>
@@ -403,6 +431,11 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("Data.Entities.Role", b =>
+                {
+                    b.Navigation("Accounts");
                 });
 
             modelBuilder.Entity("Data.Entities.Table", b =>

@@ -1,4 +1,5 @@
 ﻿using Data.Enums;
+using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Utilities.Common;
@@ -35,5 +36,7 @@ namespace Models.Dishes
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt => DateTime.Now;
+
+        public IFormFile? Cover { get; set; }
     }
 }

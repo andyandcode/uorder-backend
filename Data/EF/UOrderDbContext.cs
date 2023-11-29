@@ -15,9 +15,7 @@ namespace Data.EF
         {
             modelBuilder.ApplyConfiguration(new AccountConfiguration());
             modelBuilder.ApplyConfiguration(new DishConfiguration());
-            modelBuilder.ApplyConfiguration(new DishMediaConfiguration());
             modelBuilder.ApplyConfiguration(new DishMenuConfiguration());
-            modelBuilder.ApplyConfiguration(new MediaConfiguration());
             modelBuilder.ApplyConfiguration(new MenuConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new OrderDetailConfiguration());
@@ -31,9 +29,7 @@ namespace Data.EF
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Dish> Dishes { get; set; }
-        public DbSet<DishMedia> DishMedias { get; set; }
         public DbSet<DishMenu> DishMenus { get; set; }
-        public DbSet<Media> Medias { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }

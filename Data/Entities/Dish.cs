@@ -13,8 +13,8 @@ namespace Data.Entities
         public int QtyPerDay { get; set; }
         public DishType Type { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string? Cover { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
-        public List<DishMedia> DishMedias { get; set; }
         public virtual ICollection<DishMenu> Menus { get; set; }
     }
 }

@@ -17,7 +17,7 @@ namespace Models.Dishes
         public string TypeName { get; set; }
         public DateTime CreatedAt { get; set; }
         public List<string> OrderDetails { get; set; } = new List<string>();
-        public List<string> DishMedias { get; set; } = new List<string>();
         public virtual List<MenuVm> DishMenus { get; set; }
+        public string? CoverLink { get; set; }
     }
 }

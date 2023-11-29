@@ -8,5 +8,10 @@ namespace Application.Orders
         {
             await Clients.All.SendAsync("ReceiveOrderNotification", message);
         }
+
+        public async Task NotifyBookingUpdate(string bookingId)
+        {
+            await Clients.All.SendAsync("ReceiveBookingUpdate", bookingId);
+        }
     }
 }

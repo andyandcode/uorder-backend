@@ -60,11 +60,11 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "110116-231123-747169",
-                            CreatedAt = new DateTime(2023, 11, 23, 20, 28, 39, 632, DateTimeKind.Local).AddTicks(1235),
+                            Id = "110116-291123-182992",
+                            CreatedAt = new DateTime(2023, 11, 29, 20, 56, 0, 696, DateTimeKind.Local).AddTicks(4619),
                             IsActive = true,
-                            Password = "$2a$11$xe0euElPoyzjinVIsMCgIOITghnZY2ZUrb0Lg0.EKGFpisVSCznni",
-                            RoleId = "108101-231123-746990",
+                            Password = "$2a$11$1b9B.fXTOFuwir5fg2I0GedsFZh.zxUD2xzFjTT6YwuUbP2ONQQDC",
+                            RoleId = "108101-291123-182839",
                             Username = "admin"
                         });
                 });
@@ -100,10 +100,13 @@ namespace Data.Migrations
                     b.Property<int>("CompletionTime")
                         .HasColumnType("int");
 
+                    b.Property<string>("Cover")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 23, 20, 28, 39, 371, DateTimeKind.Local).AddTicks(5701));
+                        .HasDefaultValue(new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(1646));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -136,21 +139,6 @@ namespace Data.Migrations
                     b.ToTable("Dishes", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.DishMedia", b =>
-                {
-                    b.Property<string>("MediaId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("DishId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("MediaId", "DishId");
-
-                    b.HasIndex("DishId");
-
-                    b.ToTable("DishOfMedia", (string)null);
-                });
-
             modelBuilder.Entity("Data.Entities.DishMenu", b =>
                 {
                     b.Property<string>("MenuId")
@@ -166,30 +154,6 @@ namespace Data.Migrations
                     b.ToTable("DishOfMenu", (string)null);
                 });
 
-            modelBuilder.Entity("Data.Entities.Media", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 23, 20, 28, 39, 372, DateTimeKind.Local).AddTicks(6525));
-
-                    b.Property<string>("Desc")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Medias", (string)null);
-                });
-
             modelBuilder.Entity("Data.Entities.Menu", b =>
                 {
                     b.Property<string>("Id")
@@ -198,7 +162,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 23, 20, 28, 39, 372, DateTimeKind.Local).AddTicks(8054));
+                        .HasDefaultValue(new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(9672));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -316,19 +280,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "108101-231123-746990",
+                            Id = "108101-291123-182839",
                             Level = 1,
                             Name = "admin"
                         },
                         new
                         {
-                            Id = "108101-231123-321898",
+                            Id = "108101-291123-965501",
                             Level = 2,
                             Name = "creator"
                         },
                         new
                         {
-                            Id = "108101-231123-322069",
+                            Id = "108101-291123-965630",
                             Level = 3,
                             Name = "staff"
                         });
@@ -401,25 +365,6 @@ namespace Data.Migrations
                     b.Navigation("Roles");
                 });
 
-            modelBuilder.Entity("Data.Entities.DishMedia", b =>
-                {
-                    b.HasOne("Data.Entities.Dish", "Dish")
-                        .WithMany("DishMedias")
-                        .HasForeignKey("DishId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.Entities.Media", "Media")
-                        .WithMany("DishMedias")
-                        .HasForeignKey("MediaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Dish");
-
-                    b.Navigation("Media");
-                });
-
             modelBuilder.Entity("Data.Entities.DishMenu", b =>
                 {
                     b.HasOne("Data.Entities.Dish", "Dish")
@@ -470,16 +415,9 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Dish", b =>
                 {
-                    b.Navigation("DishMedias");
-
                     b.Navigation("Menus");
 
                     b.Navigation("OrderDetails");
-                });
-
-            modelBuilder.Entity("Data.Entities.Media", b =>
-                {
-                    b.Navigation("DishMedias");
                 });
 
             modelBuilder.Entity("Data.Entities.Menu", b =>

@@ -1,4 +1,5 @@
 ﻿using Application.ActiveLogs;
+using Application.Files;
 using Data.EF;
 using Data.Entities;
 using Data.Enums;
@@ -11,11 +12,13 @@ namespace Application.Dishes
     {
         private readonly UOrderDbContext _context;
         private readonly IActiveLogService _activeLogService;
+        private readonly IFileService _fileService;
 
-        public DishService(UOrderDbContext dbContext, IActiveLogService activeLogService)
+        public DishService(UOrderDbContext dbContext, IActiveLogService activeLogService, IFileService fileService)
         {
             _context = dbContext;
             _activeLogService = activeLogService;
+            _fileService = fileService;
         }
 
         public async Task<int> Create(DishCreateRequest req)
@@ -31,6 +34,7 @@ namespace Application.Dishes
                 QtyPerDay = req.QtyPerDay,
                 Type = req.Type,
                 CreatedAt = req.CreatedAt,
+                Cover = req.Cover != null ? await _fileService.UploadImage(req.Cover) : null,
             };
             _context.Add(item);
 
@@ -59,6 +63,7 @@ namespace Application.Dishes
                 QtyPerDay = req.QtyPerDay,
                 Type = req.Type,
                 CreatedAt = req.CreatedAt,
+                Cover = req.Cover != null ? await _fileService.UploadImage(req.Cover) : null,
             };
             _context.Update(item);
 
@@ -106,6 +111,7 @@ namespace Application.Dishes
                 Type = p.Type,
                 CreatedAt = p.CreatedAt,
                 TypeName = p.Type.ToString(),
+                CoverLink = p.Cover,
             }).ToList();
         }
 
@@ -126,6 +132,7 @@ namespace Application.Dishes
                 QtyPerDay = product.QtyPerDay,
                 Type = product.Type,
                 CreatedAt = product.CreatedAt,
+                CoverLink = product.Cover,
             };
 
             return item;
@@ -146,6 +153,7 @@ namespace Application.Dishes
                 Type = p.Type,
                 CreatedAt = p.CreatedAt,
                 TypeName = p.Type.ToString(),
+                CoverLink = p.Cover,
             }).ToList();
         }
     }
