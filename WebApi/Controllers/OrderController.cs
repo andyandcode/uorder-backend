@@ -90,6 +90,7 @@ namespace WebApi.Controllers
             var result = await _orderService.Update(req);
             if (result == 0)
                 return BadRequest();
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Đơn hàng vừa được cập nhập!");
             return Ok();
         }
 

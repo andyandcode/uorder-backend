@@ -45,5 +45,9 @@ namespace Models.Orders
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CompletedAt { get; set; }
+
+        public int MoneyChange { get; set; }
+        public int MoneyReceive { get; set; }
+        public string? Staff { get; set; }
     }
 }

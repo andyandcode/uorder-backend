@@ -4,6 +4,7 @@ using Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    partial class UOrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231201125410_initial36")]
+    partial class initial36
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,11 +63,11 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "110116-011223-570597",
-                            CreatedAt = new DateTime(2023, 12, 1, 20, 22, 58, 45, DateTimeKind.Local).AddTicks(5171),
+                            Id = "110116-011223-526261",
+                            CreatedAt = new DateTime(2023, 12, 1, 19, 54, 9, 349, DateTimeKind.Local).AddTicks(6365),
                             IsActive = true,
-                            Password = "$2a$11$aWs55Ye5o1opqD/qSsmSG.KkcXTvE27vEvbuda3faaZ1juSigLEU.",
-                            RoleId = "108101-011223-570387",
+                            Password = "$2a$11$vqZVpBVLmk2AHk6lMloOoO19HNyAd1jSTkrSWR1c8WKSp/guIVkE.",
+                            RoleId = "108101-011223-526007",
                             Username = "admin"
                         });
                 });
@@ -106,7 +109,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 1, 20, 22, 57, 848, DateTimeKind.Local).AddTicks(8703));
+                        .HasDefaultValue(new DateTime(2023, 12, 1, 19, 54, 8, 946, DateTimeKind.Local).AddTicks(466));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -162,7 +165,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 1, 20, 22, 57, 850, DateTimeKind.Local).AddTicks(1635));
+                        .HasDefaultValue(new DateTime(2023, 12, 1, 19, 54, 8, 948, DateTimeKind.Local).AddTicks(4011));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -218,9 +221,6 @@ namespace Data.Migrations
 
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
-
-                    b.Property<string>("Staff")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Subtotal")
                         .HasColumnType("int");
@@ -289,19 +289,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "108101-011223-570387",
+                            Id = "108101-011223-526007",
                             Level = 1,
                             Name = "admin"
                         },
                         new
                         {
-                            Id = "108101-011223-455998",
+                            Id = "108101-011223-498554",
                             Level = 2,
                             Name = "creator"
                         },
                         new
                         {
-                            Id = "108101-011223-456088",
+                            Id = "108101-011223-498740",
                             Level = 3,
                             Name = "staff"
                         });

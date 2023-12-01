@@ -10,5 +10,7 @@ namespace Application.ActiveLogs
         Task<List<ActiveLogVm>> GetActiveLogByEntityId(string id);
 
         Task<List<ActiveLogVm>> GetActiveLogByEntityType(EntityType type);
+
+        Task<List<ActiveLogVm>> GetAll();
     }
 }

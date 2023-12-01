@@ -38,5 +38,16 @@ namespace WebApi.Controllers
             var list = await _activeLogService.GetActiveLogByEntityType(type);
             return Ok(list);
         }
+
+        /// <summary>
+        /// Get list active log.
+        /// </summary>
+        [Authorize(Roles = "admin")]
+        [HttpGet("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            var list = await _activeLogService.GetAll();
+            return Ok(list);
+        }
     }
 }

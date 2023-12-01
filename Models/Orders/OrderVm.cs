@@ -23,5 +23,8 @@ namespace Models.Orders
         public DateTime CompletedAt { get; set; }
         public int TimeToReceive { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
+        public int MoneyChange { get; set; }
+        public int MoneyReceive { get; set; }
+        public string? Staff { get; set; }
     }
 }

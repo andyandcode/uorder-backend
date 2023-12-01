@@ -3,6 +3,7 @@ using Application.SystemSettings;
 using Data.EF;
 using Data.Entities;
 using Data.Enums;
+using Microsoft.EntityFrameworkCore;
 using Models.ActiveLogs;
 using Models.Tables;
 
@@ -110,7 +111,7 @@ namespace Application.Tables
 
         public async Task<TableVm> GetById(string id)
         {
-            var target = await _context.Tables.FindAsync(id);
+            var target = await _context.Tables.Where(x => x.IsActive == true && x.Id == id).FirstOrDefaultAsync();
             if (target == null)
                 return null;
 

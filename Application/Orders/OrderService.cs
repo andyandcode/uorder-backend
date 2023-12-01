@@ -44,12 +44,15 @@ namespace Application.Orders
                 Note = req.Note,
                 TableId = req.TableId,
                 OrderStatus = OrderStatus.Ordered,
-                PaymentStatus = PaymentStatus.Unpaid,
+                PaymentStatus = req.PaymentMethod == PaymentMethod.Cash ? PaymentStatus.Paid : PaymentStatus.Unpaid,
                 CreatedAt = req.CreatedAt,
                 OrderType = req.OrderType,
                 Subtotal = req.Subtotal,
                 Discount = req.Discount,
                 PaymentMethod = req.PaymentMethod,
+                MoneyChange = req.PaymentMethod == PaymentMethod.Cash ? req.MoneyChange : 0,
+                MoneyReceive = req.PaymentMethod == PaymentMethod.Cash ? req.MoneyReceive : req.Total,
+                Staff = req.OrderType == OrderType.TakeAway ? req.Staff : "",
                 CompletedAt = await OrderInQueue(req),
             };
 
@@ -97,7 +100,10 @@ namespace Application.Orders
                 OrderStatus = req.OrderStatus,
                 PaymentStatus = req.PaymentStatus,
                 CreatedAt = req.CreatedAt,
-                OrderType = req.OrderType
+                OrderType = req.OrderType,
+                MoneyChange = req.MoneyChange,
+                MoneyReceive = req.MoneyReceive,
+                Staff = req.Staff,
             };
             _context.Update(item);
 
@@ -170,6 +176,9 @@ namespace Application.Orders
                 OrderType = p.OrderType,
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -203,6 +212,9 @@ namespace Application.Orders
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
                 CompletedAt = p.CompletedAt,
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
@@ -238,6 +250,9 @@ namespace Application.Orders
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
                 CompletedAt = p.CompletedAt,
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
@@ -272,6 +287,9 @@ namespace Application.Orders
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
                 CompletedAt = p.CompletedAt,
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
@@ -307,6 +325,9 @@ namespace Application.Orders
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
                 CompletedAt = p.CompletedAt,
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {

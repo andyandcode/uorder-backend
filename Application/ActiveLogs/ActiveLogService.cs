@@ -60,5 +60,18 @@ namespace Application.ActiveLogs
 
             return list;
         }
+
+        public async Task<List<ActiveLogVm>> GetAll()
+        {
+            return await _context.ActiveLogs.Select(p => new ActiveLogVm()
+            {
+                Key = p.Id,
+                Id = p.Id,
+                EntityId = p.EntityId,
+                Timestamp = p.Timestamp,
+                EntityType = p.EntityType,
+                ActiveLogActionType = p.ActiveLogActionType,
+            }).ToListAsync();
+        }
     }
 }
