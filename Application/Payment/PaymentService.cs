@@ -1,4 +1,6 @@
-﻿using Application.SystemSettings;
+﻿using Application.Payment.ZaloPay;
+using Application.Payment.ZaloPay.Models;
+using Application.SystemSettings;
 using Microsoft.AspNetCore.Http;
 using Models.Orders;
 using System.Net;
@@ -56,6 +58,30 @@ namespace Application.Payment
             }
 
             return ipAddress.ToString();
+        }
+
+        public async Task<string> ZaloPay(OrderCreateRequest req, string id)
+        {
+            var banklistResponse = await ZaloPayHelper.GetBankList();
+            var banklist = ZaloPayHelper.ParseBankList(banklistResponse);
+
+            var amount = req.Total;
+            var description = "Demo - thanh toán đơn hàng" + id;
+            var bankcode = "CC";
+            var embeddata = NgrokHelper.CreateEmbeddataWithPublicUrl();
+
+            var orderData = new OrderData(amount, description, bankcode, embeddata);
+            var order = await ZaloPayHelper.CreateOrder(orderData);
+            var returncode = (long)order["returncode"];
+
+            if (returncode == 1)
+            {
+                return order["orderurl"].ToString();
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

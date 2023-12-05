@@ -23,13 +23,7 @@ namespace Models.Dishes
         public int Price { get; set; }
 
         [Required]
-        public int CompletionTime { get; set; }
-
-        [Required]
         public bool IsActive { get; set; }
-
-        [Required]
-        public int QtyPerDay { get; set; }
 
         [Required]
         public DishType Type { get; set; }

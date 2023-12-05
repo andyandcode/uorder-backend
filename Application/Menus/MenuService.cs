@@ -128,11 +128,10 @@ namespace Application.Menus
                     Desc = i.Dish.Desc,
                     Price = i.Dish.Price,
                     IsActive = i.Dish.IsActive,
-                    CompletionTime = i.Dish.CompletionTime,
-                    QtyPerDay = i.Dish.QtyPerDay,
                     Type = i.Dish.Type,
                     CreatedAt = i.Dish.CreatedAt,
                     TypeName = i.Dish.Type.ToString(),
+                    CoverLink = i.Dish.Cover,
                 }).ToList(),
             }).ToListAsync();
             return result;
@@ -156,11 +155,10 @@ namespace Application.Menus
                     Desc = i.Dish.Desc,
                     Price = i.Dish.Price,
                     IsActive = i.Dish.IsActive,
-                    CompletionTime = i.Dish.CompletionTime,
-                    QtyPerDay = i.Dish.QtyPerDay,
                     Type = i.Dish.Type,
                     CreatedAt = i.Dish.CreatedAt,
                     TypeName = i.Dish.Type.ToString(),
+                    CoverLink = i.Dish.Cover,
                 }).ToList(),
             }).ToListAsync();
             return result;

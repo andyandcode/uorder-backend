@@ -24,7 +24,6 @@ namespace Application.SystemSettings
             var item = new SystemSetting()
             {
                 Id = req.Id,
-                ChefCount = req.ChefCount,
                 Domain = req.Domain,
             };
             _context.Add(item);
@@ -36,7 +35,6 @@ namespace Application.SystemSettings
             var item = new SystemSetting()
             {
                 Id = req.Id,
-                ChefCount = req.ChefCount,
                 Domain = req.Domain,
             };
             _context.Update(item);
@@ -58,7 +56,6 @@ namespace Application.SystemSettings
             return await _context.SystemSettings.Select(p => new SystemSettingVm()
             {
                 Id = p.Id,
-                ChefCount = p.ChefCount,
                 Domain = p.Domain,
             }).FirstAsync();
         }

@@ -17,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Stripe;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -85,7 +84,7 @@ namespace WebApi
                 options.AddPolicy("CorsPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000")
+                        builder.WithOrigins("http://localhost:3000", "https://uorder-web-admin.vercel.app")
                                .AllowAnyHeader()
                                .AllowAnyMethod()
                                .AllowCredentials();
@@ -128,7 +127,6 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            StripeConfiguration.ApiKey = "sk_test_51OGK6rCiJmzbvwPesBddvpTBN3liP8clS0WxWYjgvAMGkuMe7xkqBmFPEThNB9gOGGkPZqXjAahnyJIMylMJiFhC00eTy4j0mS";
             app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseAuthentication();

@@ -24,7 +24,6 @@ namespace Application.Tables
 
         public async Task<int> Create(TableCreateRequest req)
         {
-            var setting = await _systemSettingService.GetSettings();
             var item = new Table()
             {
                 Id = req.Id,
@@ -32,7 +31,6 @@ namespace Application.Tables
                 IsActive = req.IsActive,
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
-                Route = setting.Domain + "/booking/" + req.Id,
             };
             _context.Add(item);
 
@@ -50,7 +48,6 @@ namespace Application.Tables
 
         public async Task<int> Update(TableUpdateRequest req)
         {
-            var setting = await _systemSettingService.GetSettings();
             var item = new Table()
             {
                 Id = req.Id,
@@ -58,7 +55,6 @@ namespace Application.Tables
                 IsActive = req.IsActive,
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
-                Route = setting.Domain + "/booking/" + req.Id,
             };
             _context.Update(item);
 
@@ -123,7 +119,6 @@ namespace Application.Tables
                 IsActive = target.IsActive,
                 Desc = target.Desc,
                 CreatedAt = target.CreatedAt,
-                Route = target.Route,
             };
 
             return item;

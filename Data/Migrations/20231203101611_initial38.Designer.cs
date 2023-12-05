@@ -4,6 +4,7 @@ using Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    partial class UOrderDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231203101611_initial38")]
+    partial class initial38
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,11 +63,11 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "110116-031223-746070",
-                            CreatedAt = new DateTime(2023, 12, 3, 19, 29, 9, 194, DateTimeKind.Local).AddTicks(3063),
+                            Id = "110116-031223-965281",
+                            CreatedAt = new DateTime(2023, 12, 3, 17, 16, 11, 94, DateTimeKind.Local).AddTicks(8345),
                             IsActive = true,
-                            Password = "$2a$11$/khNg/2q5NrBZurA9Tzmq.J1.vCvL9PTwuXHs6F7OimOZ2JOdt8ty",
-                            RoleId = "108101-031223-745940",
+                            Password = "$2a$11$MRLBiuOoeoyLfhrrOEZn8O7ojIlg64M.eTdtQeXTYROKBrQV86czS",
+                            RoleId = "108101-031223-965151",
                             Username = "admin"
                         });
                 });
@@ -103,7 +106,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 3, 19, 29, 8, 872, DateTimeKind.Local).AddTicks(7331));
+                        .HasDefaultValue(new DateTime(2023, 12, 3, 17, 16, 10, 794, DateTimeKind.Local).AddTicks(8317));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -154,7 +157,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 12, 3, 19, 29, 8, 873, DateTimeKind.Local).AddTicks(3672));
+                        .HasDefaultValue(new DateTime(2023, 12, 3, 17, 16, 10, 795, DateTimeKind.Local).AddTicks(4151));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -180,6 +183,9 @@ namespace Data.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -278,19 +284,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "108101-031223-745940",
+                            Id = "108101-031223-965151",
                             Level = 1,
                             Name = "admin"
                         },
                         new
                         {
-                            Id = "108101-031223-943990",
+                            Id = "108101-031223-949348",
                             Level = 2,
                             Name = "creator"
                         },
                         new
                         {
-                            Id = "108101-031223-944086",
+                            Id = "108101-031223-949452",
                             Level = 3,
                             Name = "staff"
                         });
@@ -300,6 +306,11 @@ namespace Data.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ChefCount")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.Property<string>("Domain")
                         .IsRequired()
@@ -313,6 +324,7 @@ namespace Data.Migrations
                         new
                         {
                             Id = "1",
+                            ChefCount = 1,
                             Domain = "https://localhost:7297"
                         });
                 });
@@ -334,6 +346,10 @@ namespace Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Route")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

@@ -7,5 +7,7 @@ namespace Application.Payment
         Task GetAllPayment();
 
         string VnPayPayment(OrderCreateRequest order, string id);
+
+        Task<string> ZaloPay(OrderCreateRequest order, string id);
     }
 }
