@@ -1,4 +1,5 @@
-﻿using Data.Enums;
+﻿using Data.Entities;
+using Data.Enums;
 using Models.OrderDetails;
 
 namespace Models.Orders
@@ -26,5 +27,6 @@ namespace Models.Orders
         public int MoneyChange { get; set; }
         public int MoneyReceive { get; set; }
         public string? Staff { get; set; }
+        public DiscountCode? DiscountCode { get; set; }
     }
 }

@@ -8,79 +8,68 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class initial36 : Migration
+    public partial class initial5 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ActiveLog");
+
             migrationBuilder.DeleteData(
                 table: "Accounts",
                 keyColumn: "Id",
-                keyValue: "110116-291123-182992");
+                keyValue: "110116-081223-251056");
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
-                keyValue: "108101-291123-965501");
+                keyValue: "108101-081223-791623");
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
-                keyValue: "108101-291123-965630");
+                keyValue: "108101-081223-791717");
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
-                keyValue: "108101-291123-182839");
-
-            migrationBuilder.AddColumn<int>(
-                name: "MoneyChange",
-                table: "Orders",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
-
-            migrationBuilder.AddColumn<int>(
-                name: "MoneyReceive",
-                table: "Orders",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                keyValue: "108101-081223-250915");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "Menus",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(2023, 12, 1, 19, 54, 8, 948, DateTimeKind.Local).AddTicks(4011),
+                defaultValue: new DateTime(2023, 12, 8, 14, 10, 48, 800, DateTimeKind.Local).AddTicks(3121),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
-                oldDefaultValue: new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(9672));
+                oldDefaultValue: new DateTime(2023, 12, 8, 0, 28, 15, 121, DateTimeKind.Local).AddTicks(6267));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "Dishes",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(2023, 12, 1, 19, 54, 8, 946, DateTimeKind.Local).AddTicks(466),
+                defaultValue: new DateTime(2023, 12, 8, 14, 10, 48, 799, DateTimeKind.Local).AddTicks(6638),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
-                oldDefaultValue: new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(1646));
+                oldDefaultValue: new DateTime(2023, 12, 8, 0, 28, 15, 120, DateTimeKind.Local).AddTicks(9467));
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Level", "Name" },
                 values: new object[,]
                 {
-                    { "108101-011223-498554", 2, "creator" },
-                    { "108101-011223-498740", 3, "staff" },
-                    { "108101-011223-526007", 1, "admin" }
+                    { "108101-081223-035670", 1, "admin" },
+                    { "108101-081223-670438", 2, "creator" },
+                    { "108101-081223-670532", 3, "staff" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "Id", "CreatedAt", "IsActive", "Password", "RoleId", "Username" },
-                values: new object[] { "110116-011223-526261", new DateTime(2023, 12, 1, 19, 54, 9, 349, DateTimeKind.Local).AddTicks(6365), true, "$2a$11$vqZVpBVLmk2AHk6lMloOoO19HNyAd1jSTkrSWR1c8WKSp/guIVkE.", "108101-011223-526007", "admin" });
+                values: new object[] { "110116-081223-035810", new DateTime(2023, 12, 8, 14, 10, 49, 66, DateTimeKind.Local).AddTicks(9824), true, "$2a$11$EM6Uk0X.5skG6a4pOhq/p.b6r6BDKRqtKhl/QbB3GRPOOeWCcthHO", "108101-081223-035670", "admin" });
         }
 
         /// <inheritdoc />
@@ -89,65 +78,72 @@ namespace Data.Migrations
             migrationBuilder.DeleteData(
                 table: "Accounts",
                 keyColumn: "Id",
-                keyValue: "110116-011223-526261");
+                keyValue: "110116-081223-035810");
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
-                keyValue: "108101-011223-498554");
+                keyValue: "108101-081223-670438");
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
-                keyValue: "108101-011223-498740");
+                keyValue: "108101-081223-670532");
 
             migrationBuilder.DeleteData(
                 table: "Roles",
                 keyColumn: "Id",
-                keyValue: "108101-011223-526007");
-
-            migrationBuilder.DropColumn(
-                name: "MoneyChange",
-                table: "Orders");
-
-            migrationBuilder.DropColumn(
-                name: "MoneyReceive",
-                table: "Orders");
+                keyValue: "108101-081223-035670");
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "Menus",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(9672),
+                defaultValue: new DateTime(2023, 12, 8, 0, 28, 15, 121, DateTimeKind.Local).AddTicks(6267),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
-                oldDefaultValue: new DateTime(2023, 12, 1, 19, 54, 8, 948, DateTimeKind.Local).AddTicks(4011));
+                oldDefaultValue: new DateTime(2023, 12, 8, 14, 10, 48, 800, DateTimeKind.Local).AddTicks(3121));
 
             migrationBuilder.AlterColumn<DateTime>(
                 name: "CreatedAt",
                 table: "Dishes",
                 type: "datetime2",
                 nullable: false,
-                defaultValue: new DateTime(2023, 11, 29, 20, 56, 0, 416, DateTimeKind.Local).AddTicks(1646),
+                defaultValue: new DateTime(2023, 12, 8, 0, 28, 15, 120, DateTimeKind.Local).AddTicks(9467),
                 oldClrType: typeof(DateTime),
                 oldType: "datetime2",
-                oldDefaultValue: new DateTime(2023, 12, 1, 19, 54, 8, 946, DateTimeKind.Local).AddTicks(466));
+                oldDefaultValue: new DateTime(2023, 12, 8, 14, 10, 48, 799, DateTimeKind.Local).AddTicks(6638));
+
+            migrationBuilder.CreateTable(
+                name: "ActiveLog",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ActiveLogActionType = table.Column<int>(type: "int", nullable: false),
+                    EntityId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EntityType = table.Column<int>(type: "int", nullable: false),
+                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ActiveLog", x => x.Id);
+                });
 
             migrationBuilder.InsertData(
                 table: "Roles",
                 columns: new[] { "Id", "Level", "Name" },
                 values: new object[,]
                 {
-                    { "108101-291123-182839", 1, "admin" },
-                    { "108101-291123-965501", 2, "creator" },
-                    { "108101-291123-965630", 3, "staff" }
+                    { "108101-081223-250915", 1, "admin" },
+                    { "108101-081223-791623", 2, "creator" },
+                    { "108101-081223-791717", 3, "staff" }
                 });
 
             migrationBuilder.InsertData(
                 table: "Accounts",
                 columns: new[] { "Id", "CreatedAt", "IsActive", "Password", "RoleId", "Username" },
-                values: new object[] { "110116-291123-182992", new DateTime(2023, 11, 29, 20, 56, 0, 696, DateTimeKind.Local).AddTicks(4619), true, "$2a$11$1b9B.fXTOFuwir5fg2I0GedsFZh.zxUD2xzFjTT6YwuUbP2ONQQDC", "108101-291123-182839", "admin" });
+                values: new object[] { "110116-081223-251056", new DateTime(2023, 12, 8, 0, 28, 15, 379, DateTimeKind.Local).AddTicks(1082), true, "$2a$11$mWmrqJsdIaG9r1Hpd0aHSunySfubSq6paRDFvZW14fRta0j9gcS8G", "108101-081223-250915", "admin" });
         }
     }
 }

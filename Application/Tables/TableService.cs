@@ -1,10 +1,7 @@
-﻿using Application.ActiveLogs;
-using Application.SystemSettings;
+﻿using Application.SystemSettings;
 using Data.EF;
 using Data.Entities;
-using Data.Enums;
 using Microsoft.EntityFrameworkCore;
-using Models.ActiveLogs;
 using Models.Tables;
 
 namespace Application.Tables
@@ -13,13 +10,11 @@ namespace Application.Tables
     {
         private readonly UOrderDbContext _context;
         private readonly ISystemSettingService _systemSettingService;
-        private readonly IActiveLogService _activeLogService;
 
-        public TableService(UOrderDbContext dbContext, ISystemSettingService systemSettingService, IActiveLogService activeLogService)
+        public TableService(UOrderDbContext dbContext, ISystemSettingService systemSettingService)
         {
             _context = dbContext;
             _systemSettingService = systemSettingService;
-            _activeLogService = activeLogService;
         }
 
         public async Task<int> Create(TableCreateRequest req)
@@ -33,15 +28,6 @@ namespace Application.Tables
                 CreatedAt = req.CreatedAt,
             };
             _context.Add(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Table,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -58,15 +44,6 @@ namespace Application.Tables
             };
             _context.Update(item);
 
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Table,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
-
             return await _context.SaveChangesAsync();
         }
 
@@ -77,15 +54,6 @@ namespace Application.Tables
                 return 0;
 
             _context.Tables.Remove(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Table,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }

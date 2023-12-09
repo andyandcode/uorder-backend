@@ -1,9 +1,6 @@
-﻿using Application.ActiveLogs;
-using Application.Files;
+﻿using Application.Files;
 using Data.EF;
 using Data.Entities;
-using Data.Enums;
-using Models.ActiveLogs;
 using Models.Dishes;
 
 namespace Application.Dishes
@@ -11,13 +8,11 @@ namespace Application.Dishes
     public class DishService : IDishService
     {
         private readonly UOrderDbContext _context;
-        private readonly IActiveLogService _activeLogService;
         private readonly IFileService _fileService;
 
-        public DishService(UOrderDbContext dbContext, IActiveLogService activeLogService, IFileService fileService)
+        public DishService(UOrderDbContext dbContext, IFileService fileService)
         {
             _context = dbContext;
-            _activeLogService = activeLogService;
             _fileService = fileService;
         }
 
@@ -35,15 +30,6 @@ namespace Application.Dishes
                 Cover = req.Cover != null ? await _fileService.UploadImage(req.Cover) : null,
             };
             _context.Add(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Dish,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -63,15 +49,6 @@ namespace Application.Dishes
             };
             _context.Update(item);
 
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Dish,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
-
             return await _context.SaveChangesAsync();
         }
 
@@ -79,15 +56,6 @@ namespace Application.Dishes
         {
             var product = await _context.Dishes.FindAsync(id);
             _context.Dishes.Remove(product);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Dish,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }

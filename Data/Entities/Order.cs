@@ -20,5 +20,7 @@ namespace Data.Entities
         public int MoneyChange { get; set; }
         public int MoneyReceive { get; set; }
         public string? Staff { get; set; }
+        public string? DiscountCodeId { get; set; }
+        public DiscountCode? DiscountCode { get; set; }
     }
 }

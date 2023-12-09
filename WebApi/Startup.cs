@@ -1,6 +1,6 @@
 ﻿using Application.Accounts;
-using Application.ActiveLogs;
 using Application.AutoMapper;
+using Application.DiscountCodes;
 using Application.Dishes;
 using Application.Files;
 using Application.Jwt;
@@ -84,7 +84,7 @@ namespace WebApi
                 options.AddPolicy("CorsPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000", "https://uorder-web-admin.vercel.app")
+                        builder.WithOrigins("http://localhost:3000", "http://192.168.0.101:80", "http://192.168.0.101:90", "http://192.168.0.101")
                                .AllowAnyHeader()
                                .AllowAnyMethod()
                                .AllowCredentials();
@@ -116,11 +116,11 @@ namespace WebApi
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ISystemSettingService, SystemSettingService>();
             services.AddTransient<ITableService, TableService>();
-            services.AddTransient<IActiveLogService, ActiveLogService>();
             services.AddTransient<IAccountService, Application.Accounts.AccountService>();
             services.AddTransient<IJwtService, JwtService>();
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<IFileService, Application.Files.FileService>();
+            services.AddTransient<IDiscountCodeService, DiscountCodeService>();
             services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=uorderfile123;AccountKey=6zPn/Y6oku+KsZH+EZ6gFGDgZYJ0v1wPzrwaYQWAinAJfbRoQrmsVyZOhElOpZkMaqXTMAp+F1/r+AStEN5O4w==;EndpointSuffix=core.windows.net"));
         }
 

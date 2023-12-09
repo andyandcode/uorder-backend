@@ -2,6 +2,6 @@
 {
     public enum EntityType
     {
-        Account, Dish, Menu, Order, SystemSetting, Table
+        Account, Dish, Menu, Order, SystemSetting, Table, DiscountCode
     }
 }

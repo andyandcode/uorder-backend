@@ -1,5 +1,4 @@
-﻿using Application.ActiveLogs;
-using Application.Dishes;
+﻿using Application.Dishes;
 using Application.Payment;
 using Application.SystemSettings;
 using AutoMapper;
@@ -8,7 +7,6 @@ using Data.Entities;
 using Data.Enums;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
-using Models.ActiveLogs;
 using Models.Analystic;
 using Models.OrderDetails;
 using Models.Orders;
@@ -21,16 +19,14 @@ namespace Application.Orders
         private readonly IDishService _dishService;
         private readonly ISystemSettingService _systemSettingService;
         private readonly IMapper _mapper;
-        private readonly IActiveLogService _activeLogService;
         private readonly IPaymentService _paymentService;
 
-        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IActiveLogService activeLogService, IPaymentService paymentService)
+        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IPaymentService paymentService)
         {
             _context = dbContext;
             _dishService = dishService;
             _mapper = mapper;
             _systemSettingService = systemSettingService;
-            _activeLogService = activeLogService;
             _paymentService = paymentService;
         }
 
@@ -70,15 +66,6 @@ namespace Application.Orders
                 _context.OrderDetails.Add(connect);
             }
             _context.Add(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
             await _context.SaveChangesAsync();
 
             if (req.PaymentMethod == PaymentMethod.Momo)
@@ -106,15 +93,6 @@ namespace Application.Orders
             };
             _context.Update(item);
 
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
-
             return await _context.SaveChangesAsync();
         }
 
@@ -124,15 +102,6 @@ namespace Application.Orders
             var userDto = _mapper.Map<Order>(stockItem);
             patchDoc.ApplyTo(userDto);
             _context.Update(userDto);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = stockItem.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.UpdateStatus,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -144,15 +113,6 @@ namespace Application.Orders
                 return 0;
 
             _context.Orders.Remove(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }

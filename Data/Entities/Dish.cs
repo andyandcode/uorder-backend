@@ -14,5 +14,6 @@ namespace Data.Entities
         public string? Cover { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<DishMenu> Menus { get; set; }
+        public virtual ICollection<DiscountProduct> HasDiscountCodes { get; set; }
     }
 }

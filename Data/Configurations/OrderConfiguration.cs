@@ -16,6 +16,7 @@ namespace Data.Configurations
             builder.Property(x => x.PaymentStatus).IsRequired();
 
             builder.HasOne(x => x.Table).WithMany(x => x.Orders).HasForeignKey(x => x.TableId).OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(s => s.DiscountCode).WithMany(g => g.Orders).HasForeignKey(s => s.DiscountCodeId);
         }
     }
 }

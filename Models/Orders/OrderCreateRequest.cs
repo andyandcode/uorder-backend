@@ -1,4 +1,5 @@
-﻿using Data.Enums;
+﻿using Data.Entities;
+using Data.Enums;
 using Models.OrderDetails;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -49,5 +50,6 @@ namespace Models.Orders
         public int MoneyChange { get; set; }
         public int MoneyReceive { get; set; }
         public string? Staff { get; set; }
+        public DiscountCode? DiscountCode { get; set; }
     }
 }

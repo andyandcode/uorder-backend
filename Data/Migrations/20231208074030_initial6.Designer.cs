@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(UOrderDbContext))]
-    [Migration("20231129085206_initial34")]
-    partial class initial34
+    [Migration("20231208074030_initial6")]
+    partial class initial6
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,36 +63,72 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "110116-291123-161420",
-                            CreatedAt = new DateTime(2023, 11, 29, 15, 52, 5, 909, DateTimeKind.Local).AddTicks(6503),
+                            Id = "110116-081223-002549",
+                            CreatedAt = new DateTime(2023, 12, 8, 14, 40, 30, 755, DateTimeKind.Local).AddTicks(3765),
                             IsActive = true,
-                            Password = "$2a$11$pVSu813fWDlj5FKDzs0Eg./33lUgojdtTwcvAu5d1f7HBI5edjhwC",
-                            RoleId = "108101-291123-161286",
+                            Password = "$2a$11$xP90YM0.MKPPgOerGNTl2.FuDm4vZKhmeU38hWQZzlwglqwzrZRVW",
+                            RoleId = "108101-081223-002387",
                             Username = "admin"
                         });
                 });
 
-            modelBuilder.Entity("Data.Entities.ActiveLog", b =>
+            modelBuilder.Entity("Data.Entities.DiscountCode", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("ActiveLogActionType")
-                        .HasColumnType("int");
+                    b.Property<bool>("AppliesToAllProducts")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("EntityId")
+                    b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EntityType")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Discount")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Timestamp")
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxDiscountAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinDiscountAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MinOrderAmountRequired")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Percentage")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ActiveLog", (string)null);
+                    b.ToTable("DiscountCodes", (string)null);
+                });
+
+            modelBuilder.Entity("Data.Entities.DiscountProduct", b =>
+                {
+                    b.Property<string>("DishId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DiscountCodeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("DishId", "DiscountCodeId");
+
+                    b.HasIndex("DiscountCodeId");
+
+                    b.ToTable("DiscountForDish", (string)null);
                 });
 
             modelBuilder.Entity("Data.Entities.Dish", b =>
@@ -100,16 +136,13 @@ namespace Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CompletionTime")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("Cover")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Cover")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 29, 15, 52, 5, 614, DateTimeKind.Local).AddTicks(2712));
+                        .HasDefaultValue(new DateTime(2023, 12, 8, 14, 40, 30, 596, DateTimeKind.Local).AddTicks(5271));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -128,11 +161,6 @@ namespace Data.Migrations
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
-
-                    b.Property<int>("QtyPerDay")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(100);
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -165,7 +193,7 @@ namespace Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 11, 29, 15, 52, 5, 614, DateTimeKind.Local).AddTicks(9283));
+                        .HasDefaultValue(new DateTime(2023, 12, 8, 14, 40, 30, 597, DateTimeKind.Local).AddTicks(3690));
 
                     b.Property<string>("Desc")
                         .IsRequired()
@@ -192,13 +220,19 @@ namespace Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("CompletedAt")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Discount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DiscountCodeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("MoneyChange")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MoneyReceive")
                         .HasColumnType("int");
 
                     b.Property<string>("Note")
@@ -216,6 +250,9 @@ namespace Data.Migrations
                     b.Property<int>("PaymentStatus")
                         .HasColumnType("int");
 
+                    b.Property<string>("Staff")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Subtotal")
                         .HasColumnType("int");
 
@@ -226,6 +263,8 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DiscountCodeId");
 
                     b.HasIndex("TableId");
 
@@ -283,19 +322,19 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "108101-291123-161286",
+                            Id = "108101-081223-002387",
                             Level = 1,
                             Name = "admin"
                         },
                         new
                         {
-                            Id = "108101-291123-097460",
+                            Id = "108101-081223-554857",
                             Level = 2,
                             Name = "creator"
                         },
                         new
                         {
-                            Id = "108101-291123-097576",
+                            Id = "108101-081223-554963",
                             Level = 3,
                             Name = "staff"
                         });
@@ -305,11 +344,6 @@ namespace Data.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ChefCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<string>("Domain")
                         .IsRequired()
@@ -323,7 +357,6 @@ namespace Data.Migrations
                         new
                         {
                             Id = "1",
-                            ChefCount = 1,
                             Domain = "https://localhost:7297"
                         });
                 });
@@ -348,10 +381,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Route")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.ToTable("Tables", (string)null);
@@ -366,6 +395,25 @@ namespace Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("Data.Entities.DiscountProduct", b =>
+                {
+                    b.HasOne("Data.Entities.DiscountCode", "DiscountCode")
+                        .WithMany("ApplicableProductIds")
+                        .HasForeignKey("DiscountCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Entities.Dish", "Dish")
+                        .WithMany("HasDiscountCodes")
+                        .HasForeignKey("DishId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DiscountCode");
+
+                    b.Navigation("Dish");
                 });
 
             modelBuilder.Entity("Data.Entities.DishMenu", b =>
@@ -389,10 +437,17 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Entities.Order", b =>
                 {
+                    b.HasOne("Data.Entities.DiscountCode", "DiscountCode")
+                        .WithMany("Orders")
+                        .HasForeignKey("DiscountCodeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("Data.Entities.Table", "Table")
                         .WithMany("Orders")
                         .HasForeignKey("TableId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("DiscountCode");
 
                     b.Navigation("Table");
                 });
@@ -416,8 +471,17 @@ namespace Data.Migrations
                     b.Navigation("Order");
                 });
 
+            modelBuilder.Entity("Data.Entities.DiscountCode", b =>
+                {
+                    b.Navigation("ApplicableProductIds");
+
+                    b.Navigation("Orders");
+                });
+
             modelBuilder.Entity("Data.Entities.Dish", b =>
                 {
+                    b.Navigation("HasDiscountCodes");
+
                     b.Navigation("Menus");
 
                     b.Navigation("OrderDetails");
