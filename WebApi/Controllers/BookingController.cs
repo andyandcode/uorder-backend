@@ -91,6 +91,18 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Get booking by id
+        /// </summary>
+        [HttpGet("getById/{id}")]
+        public async Task<IActionResult> GetByIdClient(string id)
+        {
+            var result = await _orderService.GetById(id);
+            if (result == null)
+                return Ok();
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Gets the list of all booking.
         /// </summary>
         [HttpGet("getAll")]
