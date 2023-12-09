@@ -49,6 +49,33 @@ namespace Application.Payment
             return vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
         }
 
+        public string VnPayPayOrder(OrderVm order)
+        {
+            string vnp_Returnurl = _systemSettingService.GetSettings().Result.Domain + "/booking/" + order.Id + "/successfully/";
+            string vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+            string vnp_TmnCode = "MQYAZG9R";
+            string vnp_HashSecret = "VOUXHERQAUCCBCKMYAQEQTJBTOPDEGFM";
+
+            var vnpay = new VnPayLibrary();
+
+            vnpay.AddRequestData("vnp_Version", VnPayLibrary.VERSION);
+            vnpay.AddRequestData("vnp_Command", "pay");
+            vnpay.AddRequestData("vnp_TmnCode", vnp_TmnCode);
+            vnpay.AddRequestData("vnp_Amount", (order.Total * 100).ToString());
+            vnpay.AddRequestData("vnp_BankCode", "VNBANK");
+            vnpay.AddRequestData("vnp_CreateDate", order.CreatedAt.ToString("yyyyMMddHHmmss"));
+            vnpay.AddRequestData("vnp_CurrCode", "VND");
+            vnpay.AddRequestData("vnp_IpAddr", GetIpAddress());
+            vnpay.AddRequestData("vnp_Locale", "vn");
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + order.Id);
+            vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
+
+            vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
+            vnpay.AddRequestData("vnp_TxnRef", order.Id.ToString());
+
+            return vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
+        }
+
         private string GetIpAddress()
         {
             var ipAddress = _httpContextAccessor.HttpContext.Connection.RemoteIpAddress;

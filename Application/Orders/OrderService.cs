@@ -75,6 +75,12 @@ namespace Application.Orders
             return null;
         }
 
+        public async Task<string> PayOrder(string id)
+        {
+            var order = await GetById(id);
+            return _paymentService.VnPayPayOrder(order);
+        }
+
         public async Task<int> Update(OrderUpdateRequest req)
         {
             var item = new Order

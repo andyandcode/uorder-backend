@@ -61,7 +61,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get the menu specified by Id of table
+        /// Create new booking and payment
         /// </summary>
         [HttpPost("post")]
         [Consumes("multipart/form-data")]
@@ -72,6 +72,19 @@ namespace WebApi.Controllers
 
             var result = await _orderService.Create(req);
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Có đơn hàng mới!");
+            if (result == null)
+                return Ok();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Payment for the specified booking
+        /// </summary>
+        [HttpGet("payOrder/{id}")]
+        public async Task<IActionResult> PayOrder(string id)
+        {
+            var result = await _orderService.PayOrder(id);
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Đơn hàng vừa được cập nhập!");
             if (result == null)
                 return Ok();
             return Ok(result);

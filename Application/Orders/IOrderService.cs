@@ -9,6 +9,8 @@ namespace Application.Orders
     {
         Task<string> Create(OrderCreateRequest req);
 
+        Task<string> PayOrder(string id);
+
         Task<int> Update(OrderUpdateRequest req);
 
         Task<int> Delete(string id);
