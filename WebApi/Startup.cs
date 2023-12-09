@@ -1,4 +1,5 @@
 ﻿using Application.Accounts;
+using Application.Actions;
 using Application.AutoMapper;
 using Application.DiscountCodes;
 using Application.Dishes;
@@ -121,6 +122,7 @@ namespace WebApi
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<IFileService, Application.Files.FileService>();
             services.AddTransient<IDiscountCodeService, DiscountCodeService>();
+            services.AddTransient<IActionService, ActionService>();
             services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=uorderfile123;AccountKey=6zPn/Y6oku+KsZH+EZ6gFGDgZYJ0v1wPzrwaYQWAinAJfbRoQrmsVyZOhElOpZkMaqXTMAp+F1/r+AStEN5O4w==;EndpointSuffix=core.windows.net"));
         }
 
@@ -138,6 +140,7 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<OrderHub>("/bookingHub");
+                endpoints.MapHub<ActionHub>("/actionHub");
                 endpoints.MapControllers();
             });
             //}
