@@ -1,29 +1,25 @@
-﻿using Application.ActiveLogs;
-using Application.Jwt;
+﻿using Application.Jwt;
 using AutoMapper;
 using Data.EF;
 using Data.Entities;
-using Data.Enums;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Models.Accounts;
-using Models.ActiveLogs;
 using Utilities.Common;
 using Utilities.Constants;
 
 namespace Application.Accounts
 {
-    public class AccountService : IAccountService
+    public class AccountService : Hub, IAccountService
     {
         private readonly UOrderDbContext _context;
-        private readonly IActiveLogService _activeLogService;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
 
-        public AccountService(UOrderDbContext dbContext, IActiveLogService activeLogService, IJwtService jwtService, IMapper mapper)
+        public AccountService(UOrderDbContext dbContext, IJwtService jwtService, IMapper mapper)
         {
             _context = dbContext;
-            _activeLogService = activeLogService;
             _jwtService = jwtService;
             _mapper = mapper;
         }
@@ -176,15 +172,6 @@ namespace Application.Accounts
             };
             _context.Add(item);
 
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Account,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
-
             return await _context.SaveChangesAsync();
         }
 
@@ -203,15 +190,6 @@ namespace Application.Accounts
             };
             _context.Update(item);
 
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Account,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
-
             return await _context.SaveChangesAsync();
         }
 
@@ -219,15 +197,6 @@ namespace Application.Accounts
         {
             var product = await _context.Accounts.FindAsync(id);
             _context.Accounts.Remove(product);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Account,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -263,15 +232,6 @@ namespace Application.Accounts
             var userDto = _mapper.Map<Account>(stockItem);
             patchDoc.ApplyTo(userDto);
             _context.Update(userDto);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = stockItem.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Account,
-                ActiveLogActionType = ActiveLogActionType.UpdateStatus,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }

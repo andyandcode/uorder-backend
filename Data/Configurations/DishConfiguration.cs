@@ -13,7 +13,6 @@ namespace Data.Configurations
             builder.Property(x => x.Name).IsRequired().HasMaxLength(500);
             builder.Property(x => x.Desc).HasMaxLength(500);
             builder.Property(x => x.IsActive).IsRequired().HasDefaultValue(true);
-            builder.Property(x => x.QtyPerDay).IsRequired().HasDefaultValue(100);
             builder.Property(x => x.CreatedAt).IsRequired().HasDefaultValue(DateTime.Now);
             builder.Property(x => x.Type).IsRequired();
         }

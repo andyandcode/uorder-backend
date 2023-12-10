@@ -1,4 +1,5 @@
-﻿using Data.Enums;
+﻿using Data.Entities;
+using Data.Enums;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,7 +31,15 @@ namespace Models.Orders
         [Required]
         public OrderType OrderType { get; set; }
 
+        [Required]
+        public PaymentMethod PaymentMethod { get; set; }
+
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CompletedAt { get; set; }
+
+        public int MoneyChange { get; set; }
+        public int MoneyReceive { get; set; }
+        public string? Staff { get; set; }
+        public DiscountCode? DiscountCode { get; set; }
     }
 }

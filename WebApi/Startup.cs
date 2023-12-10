@@ -1,16 +1,21 @@
 ﻿using Application.Accounts;
-using Application.ActiveLogs;
+using Application.Actions;
 using Application.AutoMapper;
+using Application.DiscountCodes;
 using Application.Dishes;
+using Application.Files;
 using Application.Jwt;
-using Application.Medias;
 using Application.Menus;
 using Application.Orders;
+using Application.Payment;
 using Application.SystemSettings;
 using Application.Tables;
+using Azure.Storage.Blobs;
 using Data.EF;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -77,12 +82,13 @@ namespace WebApi
             services.AddSignalR();
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(
+                options.AddPolicy("CorsPolicy",
                     builder =>
                     {
-                        builder.AllowAnyOrigin()
+                        builder.WithOrigins("http://localhost:3000", "http://192.168.0.101:80", "http://192.168.0.101:90", "http://192.168.0.101")
                                .AllowAnyHeader()
-                               .AllowAnyMethod();
+                               .AllowAnyMethod()
+                               .AllowCredentials();
                     });
             });
 
@@ -104,21 +110,26 @@ namespace WebApi
                 };
             });
             services.AddAuthorization();
+            services.AddHttpContextAccessor();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddTransient<IDishService, DishService>();
-            services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<IMenuService, MenuService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ISystemSettingService, SystemSettingService>();
             services.AddTransient<ITableService, TableService>();
-            services.AddTransient<IActiveLogService, ActiveLogService>();
-            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IAccountService, Application.Accounts.AccountService>();
             services.AddTransient<IJwtService, JwtService>();
+            services.AddTransient<IPaymentService, PaymentService>();
+            services.AddTransient<IFileService, Application.Files.FileService>();
+            services.AddTransient<IDiscountCodeService, DiscountCodeService>();
+            services.AddTransient<IActionService, ActionService>();
+            services.AddSingleton(x => new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=uorderfile123;AccountKey=6zPn/Y6oku+KsZH+EZ6gFGDgZYJ0v1wPzrwaYQWAinAJfbRoQrmsVyZOhElOpZkMaqXTMAp+F1/r+AStEN5O4w==;EndpointSuffix=core.windows.net"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(WebApplication app, IWebHostEnvironment env)
         {
-            app.UseCors();
+            app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
@@ -129,6 +140,7 @@ namespace WebApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<OrderHub>("/bookingHub");
+                endpoints.MapHub<ActionHub>("/actionHub");
                 endpoints.MapControllers();
             });
             //}

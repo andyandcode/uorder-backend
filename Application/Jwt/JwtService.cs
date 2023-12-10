@@ -26,17 +26,17 @@ namespace Application.Jwt
             {
                 case "admin":
                     {
-                        expires = 15 * 60;
+                        expires = 15 * 60000;
                         break;
                     }
                 case "creator":
                     {
-                        expires = 60 * 60;
+                        expires = 60 * 60000;
                         break;
                     }
                 case "staff":
                     {
-                        expires = 600 * 60;
+                        expires = 600 * 60000;
                         break;
                     }
                 default:

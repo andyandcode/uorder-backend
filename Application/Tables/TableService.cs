@@ -1,9 +1,7 @@
-﻿using Application.ActiveLogs;
-using Application.SystemSettings;
+﻿using Application.SystemSettings;
 using Data.EF;
 using Data.Entities;
-using Data.Enums;
-using Models.ActiveLogs;
+using Microsoft.EntityFrameworkCore;
 using Models.Tables;
 
 namespace Application.Tables
@@ -12,18 +10,15 @@ namespace Application.Tables
     {
         private readonly UOrderDbContext _context;
         private readonly ISystemSettingService _systemSettingService;
-        private readonly IActiveLogService _activeLogService;
 
-        public TableService(UOrderDbContext dbContext, ISystemSettingService systemSettingService, IActiveLogService activeLogService)
+        public TableService(UOrderDbContext dbContext, ISystemSettingService systemSettingService)
         {
             _context = dbContext;
             _systemSettingService = systemSettingService;
-            _activeLogService = activeLogService;
         }
 
         public async Task<int> Create(TableCreateRequest req)
         {
-            var setting = await _systemSettingService.GetSettings();
             var item = new Table()
             {
                 Id = req.Id,
@@ -31,25 +26,14 @@ namespace Application.Tables
                 IsActive = req.IsActive,
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
-                Route = setting.Domain + "/booking/" + req.Id,
             };
             _context.Add(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Table,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
 
         public async Task<int> Update(TableUpdateRequest req)
         {
-            var setting = await _systemSettingService.GetSettings();
             var item = new Table()
             {
                 Id = req.Id,
@@ -57,18 +41,8 @@ namespace Application.Tables
                 IsActive = req.IsActive,
                 Desc = req.Desc,
                 CreatedAt = req.CreatedAt,
-                Route = setting.Domain + "/booking/" + req.Id,
             };
             _context.Update(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Table,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -80,15 +54,6 @@ namespace Application.Tables
                 return 0;
 
             _context.Tables.Remove(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Table,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -110,7 +75,7 @@ namespace Application.Tables
 
         public async Task<TableVm> GetById(string id)
         {
-            var target = await _context.Tables.FindAsync(id);
+            var target = await _context.Tables.Where(x => x.IsActive == true && x.Id == id).FirstOrDefaultAsync();
             if (target == null)
                 return null;
 
@@ -122,7 +87,6 @@ namespace Application.Tables
                 IsActive = target.IsActive,
                 Desc = target.Desc,
                 CreatedAt = target.CreatedAt,
-                Route = target.Route,
             };
 
             return item;

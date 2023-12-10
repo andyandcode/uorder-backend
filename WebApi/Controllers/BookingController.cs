@@ -1,6 +1,8 @@
 ﻿using Application.Menus;
 using Application.Orders;
 using Application.Tables;
+using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Models.Orders;
@@ -59,7 +61,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Get the menu specified by Id of table
+        /// Create new booking and payment
         /// </summary>
         [HttpPost("post")]
         [Consumes("multipart/form-data")]
@@ -69,10 +71,35 @@ namespace WebApi.Controllers
                 return BadRequest();
 
             var result = await _orderService.Create(req);
-            if (result == 0)
-                return BadRequest();
             await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Có đơn hàng mới!");
-            return Ok();
+            if (result == null)
+                return Ok();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Payment for the specified booking
+        /// </summary>
+        [HttpGet("payOrder/{id}")]
+        public async Task<IActionResult> PayOrder(string id)
+        {
+            var result = await _orderService.PayOrder(id);
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Đơn hàng vừa được cập nhập!");
+            if (result == null)
+                return Ok();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Get booking by id
+        /// </summary>
+        [HttpGet("getById/{id}")]
+        public async Task<IActionResult> GetByIdClient(string id)
+        {
+            var result = await _orderService.GetById(id);
+            if (result == null)
+                return Ok();
+            return Ok(result);
         }
 
         /// <summary>
@@ -93,6 +120,19 @@ namespace WebApi.Controllers
         {
             var list = await _orderService.GetCurrentBooking();
             return Ok(list.OrderByDescending(x => x.CreatedAt));
+        }
+
+        /// <summary>
+        /// Update the order status specified by Id
+        /// </summary>
+        [HttpPatch("patch/{id}")]
+        public async Task<IActionResult> UpdateOrderStatusClient(string id, [FromBody] JsonPatchDocument<Order> patchDoc)
+        {
+            var result = await _orderService.UpdateOrderStatus(id, patchDoc);
+            if (result == null)
+                return BadRequest();
+            await _hubContext.Clients.All.SendAsync("ReceiveOrderNotification", "Đơn hàng vừa được cập nhập!");
+            return Ok();
         }
     }
 }

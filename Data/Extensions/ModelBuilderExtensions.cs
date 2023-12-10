@@ -13,7 +13,7 @@ namespace Data.Extensions
             var adminId = item.Generator(GenerationType.Role);
 
             modelBuilder.Entity<Account>().HasData(new Account { Id = item.Generator(GenerationType.Account), Username = "admin", Password = HandleHashes.EndcodePwd("admin"), IsActive = true, CreatedAt = DateTime.Now, RoleId = adminId });
-            modelBuilder.Entity<SystemSetting>().HasData(new SystemSetting { Id = "1", ChefCount = 1, Domain = "https://localhost:7297" });
+            modelBuilder.Entity<SystemSetting>().HasData(new SystemSetting { Id = "1", Domain = "https://localhost:7297" });
 
             modelBuilder
                 .Entity<Role>()

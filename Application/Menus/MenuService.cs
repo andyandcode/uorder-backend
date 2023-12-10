@@ -1,9 +1,6 @@
-﻿using Application.ActiveLogs;
-using Data.EF;
+﻿using Data.EF;
 using Data.Entities;
-using Data.Enums;
 using Microsoft.EntityFrameworkCore;
-using Models.ActiveLogs;
 using Models.Dishes;
 using Models.Menus;
 
@@ -12,12 +9,10 @@ namespace Application.Menus
     public class MenuService : IMenuService
     {
         private readonly UOrderDbContext _context;
-        private readonly IActiveLogService _activeLogService;
 
-        public MenuService(UOrderDbContext dbContext, IActiveLogService activeLogService)
+        public MenuService(UOrderDbContext dbContext)
         {
             _context = dbContext;
-            _activeLogService = activeLogService;
         }
 
         public async Task<int> Create(MenuCreateRequest req)
@@ -42,15 +37,6 @@ namespace Application.Menus
                     _context.DishMenus.Add(connect);
                 }
             }
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Menu,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -78,15 +64,6 @@ namespace Application.Menus
                 _context.DishMenus.Add(connect);
             }
             _context.Update(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Menu,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
             return await _context.SaveChangesAsync();
         }
 
@@ -97,15 +74,6 @@ namespace Application.Menus
                 return 0;
 
             _context.Menus.Remove(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Menu,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -128,11 +96,10 @@ namespace Application.Menus
                     Desc = i.Dish.Desc,
                     Price = i.Dish.Price,
                     IsActive = i.Dish.IsActive,
-                    CompletionTime = i.Dish.CompletionTime,
-                    QtyPerDay = i.Dish.QtyPerDay,
                     Type = i.Dish.Type,
                     CreatedAt = i.Dish.CreatedAt,
                     TypeName = i.Dish.Type.ToString(),
+                    CoverLink = i.Dish.Cover,
                 }).ToList(),
             }).ToListAsync();
             return result;
@@ -156,11 +123,10 @@ namespace Application.Menus
                     Desc = i.Dish.Desc,
                     Price = i.Dish.Price,
                     IsActive = i.Dish.IsActive,
-                    CompletionTime = i.Dish.CompletionTime,
-                    QtyPerDay = i.Dish.QtyPerDay,
                     Type = i.Dish.Type,
                     CreatedAt = i.Dish.CreatedAt,
                     TypeName = i.Dish.Type.ToString(),
+                    CoverLink = i.Dish.Cover,
                 }).ToList(),
             }).ToListAsync();
             return result;

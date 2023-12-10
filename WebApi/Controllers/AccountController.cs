@@ -69,7 +69,7 @@ namespace WebApi.Controllers
             if (result == 0)
                 return BadRequest();
 
-            return Ok();
+            return Ok(result);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace WebApi.Controllers
             var result = await _accountService.Delete(id);
             if (result == 0)
                 return BadRequest();
-            return Ok();
+            return Ok(result);
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace WebApi.Controllers
             var result = await _accountService.Update(req);
             if (result == 0)
                 return BadRequest();
-            return Ok();
+            return Ok(result);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace WebApi.Controllers
             var result = await _accountService.UpdateStatus(id, patchDoc);
             if (result == 0)
                 return BadRequest();
-            return Ok();
+            return Ok(result);
         }
     }
 }

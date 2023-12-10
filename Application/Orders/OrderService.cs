@@ -1,5 +1,5 @@
-﻿using Application.ActiveLogs;
-using Application.Dishes;
+﻿using Application.Dishes;
+using Application.Payment;
 using Application.SystemSettings;
 using AutoMapper;
 using Data.EF;
@@ -7,7 +7,6 @@ using Data.Entities;
 using Data.Enums;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
-using Models.ActiveLogs;
 using Models.Analystic;
 using Models.OrderDetails;
 using Models.Orders;
@@ -20,18 +19,18 @@ namespace Application.Orders
         private readonly IDishService _dishService;
         private readonly ISystemSettingService _systemSettingService;
         private readonly IMapper _mapper;
-        private readonly IActiveLogService _activeLogService;
+        private readonly IPaymentService _paymentService;
 
-        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IActiveLogService activeLogService)
+        public OrderService(UOrderDbContext dbContext, IDishService dishService, IMapper mapper, ISystemSettingService systemSettingService, IPaymentService paymentService)
         {
             _context = dbContext;
             _dishService = dishService;
             _mapper = mapper;
             _systemSettingService = systemSettingService;
-            _activeLogService = activeLogService;
+            _paymentService = paymentService;
         }
 
-        public async Task<int> Create(OrderCreateRequest req)
+        public async Task<string> Create(OrderCreateRequest req)
         {
             var id = req.Id;
             var item = new Order
@@ -40,14 +39,18 @@ namespace Application.Orders
                 Total = req.Total,
                 Note = req.Note,
                 TableId = req.TableId,
-                OrderStatus = req.OrderStatus,
-                PaymentStatus = req.PaymentStatus,
+                OrderStatus = OrderStatus.Ordered,
+                PaymentStatus = req.PaymentMethod == PaymentMethod.Cash ? PaymentStatus.Paid : PaymentStatus.Unpaid,
                 CreatedAt = req.CreatedAt,
                 OrderType = req.OrderType,
                 Subtotal = req.Subtotal,
                 Discount = req.Discount,
-                CompletedAt = await OrderInQueue(req),
+                PaymentMethod = req.PaymentMethod,
+                MoneyChange = req.PaymentMethod == PaymentMethod.Cash ? req.MoneyChange : 0,
+                MoneyReceive = req.PaymentMethod == PaymentMethod.Cash ? req.MoneyReceive : req.PaymentStatus == PaymentStatus.Unpaid ? 0 : req.Total,
+                Staff = req.OrderType == OrderType.TakeAway ? req.Staff : "",
             };
+
             foreach (var child in req.OrderDetails)
             {
                 var connect = new OrderDetail
@@ -63,17 +66,19 @@ namespace Application.Orders
                 _context.OrderDetails.Add(connect);
             }
             _context.Add(item);
+            await _context.SaveChangesAsync();
 
-            var log = new ActiveLogCreateRequest
+            if (req.PaymentMethod == PaymentMethod.Momo)
             {
-                EntityId = id,
-                Timestamp = req.CreatedAt,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.Create,
-            };
-            await _activeLogService.CreateActiveLog(log);
+                return _paymentService.VnPayPayment(req, id);
+            }
+            return null;
+        }
 
-            return await _context.SaveChangesAsync();
+        public async Task<string> PayOrder(string id)
+        {
+            var order = await GetById(id);
+            return _paymentService.VnPayPayOrder(order);
         }
 
         public async Task<int> Update(OrderUpdateRequest req)
@@ -87,18 +92,12 @@ namespace Application.Orders
                 OrderStatus = req.OrderStatus,
                 PaymentStatus = req.PaymentStatus,
                 CreatedAt = req.CreatedAt,
-                OrderType = req.OrderType
+                OrderType = req.OrderType,
+                MoneyChange = req.MoneyChange,
+                MoneyReceive = req.MoneyReceive,
+                Staff = req.Staff,
             };
             _context.Update(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = req.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.Update,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -110,15 +109,6 @@ namespace Application.Orders
             patchDoc.ApplyTo(userDto);
             _context.Update(userDto);
 
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = stockItem.Id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.UpdateStatus,
-            };
-            await _activeLogService.CreateActiveLog(log);
-
             return await _context.SaveChangesAsync();
         }
 
@@ -129,15 +119,6 @@ namespace Application.Orders
                 return 0;
 
             _context.Orders.Remove(item);
-
-            var log = new ActiveLogCreateRequest
-            {
-                EntityId = id,
-                Timestamp = DateTime.Now,
-                EntityType = EntityType.Order,
-                ActiveLogActionType = ActiveLogActionType.Delete,
-            };
-            await _activeLogService.CreateActiveLog(log);
 
             return await _context.SaveChangesAsync();
         }
@@ -160,6 +141,9 @@ namespace Application.Orders
                 OrderType = p.OrderType,
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -192,8 +176,9 @@ namespace Application.Orders
                 OrderType = p.OrderType,
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
-                CompletedAt = p.CompletedAt,
-                TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -227,8 +212,9 @@ namespace Application.Orders
                 OrderType = p.OrderType,
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
-                CompletedAt = p.CompletedAt,
-                TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -261,8 +247,9 @@ namespace Application.Orders
                 OrderType = p.OrderType,
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
-                CompletedAt = p.CompletedAt,
-                TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -296,8 +283,9 @@ namespace Application.Orders
                 OrderType = p.OrderType,
                 Subtotal = p.Subtotal,
                 Discount = p.Discount,
-                CompletedAt = p.CompletedAt,
-                TimeToReceive = CalculatorTimeToReceive(p.CompletedAt),
+                MoneyChange = p.MoneyChange,
+                MoneyReceive = p.MoneyReceive,
+                Staff = p.Staff,
                 OrderDetails = p.OrderDetails.ToList().Select(i => new OrderDetailsVm()
                 {
                     Key = i.DishId,
@@ -312,84 +300,6 @@ namespace Application.Orders
             }).Where(package => package.TableId == id).FirstOrDefaultAsync();
 
             return target;
-        }
-
-        private async Task<DateTime> OrderInQueue(OrderCreateRequest req)
-        {
-            var settings = await _systemSettingService.GetSettings();
-
-            List<int> listTimes = new List<int>();
-            foreach (var item in req.OrderDetails)
-            {
-                var dish = await _dishService.GetById(item.DishId);
-                listTimes.Add(dish.CompletionTime * item.Qty);
-            }
-
-            var firstOrder = _context.Orders.ToList().OrderByDescending(x => x.CreatedAt).Where(x => x.OrderStatus == OrderStatus.Ordered || x.OrderStatus == OrderStatus.ToReceive).FirstOrDefault();
-
-            int minCompletionTime = ScheduleJobs(listTimes, settings.ChefCount);
-
-            DateTime currentTime = DateTime.Now;
-
-            if (firstOrder == null)
-            { currentTime = DateTime.Now; }
-            else
-            { currentTime = firstOrder.CompletedAt; }
-
-            TimeSpan additionalTime = TimeSpan.FromMinutes(minCompletionTime);
-
-            DateTime newTime = currentTime.Add(additionalTime);
-
-            return newTime;
-        }
-
-        private static int CalculatorTimeToReceive(DateTime target)
-        {
-            DateTime now = DateTime.Now;
-            TimeSpan timeDifference = target.Subtract(now);
-            return Convert.ToInt32(timeDifference.TotalMilliseconds);
-        }
-
-        private static int ScheduleJobs(List<int> jobTimes, int numWorkers)
-        {
-            List<List<int>> schedule = new List<List<int>>(numWorkers);
-            for (int i = 0; i < numWorkers; i++)
-            {
-                schedule.Add(new List<int>());
-            }
-
-            // Sắp xếp các công việc theo thời gian hoàn thành tăng dần
-            jobTimes = jobTimes.OrderByDescending(time => time).ToList();
-
-            // Thêm công việc vào công nhân có thời gian hoàn thành ngắn nhất
-            foreach (var jobTime in jobTimes)
-            {
-                int minIndex = GetMinIndex(schedule);
-                schedule[minIndex].Add(jobTime);
-            }
-
-            // Tính thời gian hoàn thành ngắn nhất
-            int minCompletionTime = schedule.Max(worker => worker.Sum());
-
-            return minCompletionTime;
-        }
-
-        private static int GetMinIndex(List<List<int>> schedule)
-        {
-            int minIndex = 0;
-            int minValue = schedule[0].Sum();
-
-            for (int i = 1; i < schedule.Count; i++)
-            {
-                int currentValue = schedule[i].Sum();
-                if (currentValue < minValue)
-                {
-                    minIndex = i;
-                    minValue = currentValue;
-                }
-            }
-
-            return minIndex;
         }
 
         public async Task<List<RevenueVm>> GetRevenue()

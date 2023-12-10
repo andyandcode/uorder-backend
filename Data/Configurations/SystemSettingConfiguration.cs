@@ -10,7 +10,6 @@ namespace Data.Configurations
         {
             builder.ToTable("SystemSettings");
             builder.HasKey(x => x.Id);
-            builder.Property(x => x.ChefCount).IsRequired().HasDefaultValue(0);
         }
     }
 }

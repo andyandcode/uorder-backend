@@ -7,7 +7,9 @@ namespace Application.Orders
 {
     public interface IOrderService
     {
-        Task<int> Create(OrderCreateRequest req);
+        Task<string> Create(OrderCreateRequest req);
+
+        Task<string> PayOrder(string id);
 
         Task<int> Update(OrderUpdateRequest req);
 

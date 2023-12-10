@@ -1,4 +1,5 @@
 ﻿using Data.Enums;
+using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
 using Utilities.Common;
@@ -22,18 +23,14 @@ namespace Models.Dishes
         public int Price { get; set; }
 
         [Required]
-        public int CompletionTime { get; set; }
-
-        [Required]
         public bool IsActive { get; set; }
-
-        [Required]
-        public int QtyPerDay { get; set; }
 
         [Required]
         public DishType Type { get; set; }
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt => DateTime.Now;
+
+        public IFormFile? Cover { get; set; }
     }
 }
