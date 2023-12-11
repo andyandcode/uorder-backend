@@ -78,6 +78,17 @@ namespace Application.Menus
             return await _context.SaveChangesAsync();
         }
 
+        public async Task<int> RemoveDishFromMenu(RemoveDishFromMenuRequest req)
+        {
+            var item = _context.DishMenus.FirstOrDefault(x => x.DishId == req.DishId && x.MenuId == req.MenuId);
+            if (item == null)
+                return 0;
+
+            _context.DishMenus.Remove(item);
+
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<List<MenuVm>> GetAll()
         {
             var result = await _context.Menus.Include(one => one.Dishes).ThenInclude(dishes => dishes.Dish).Select(p => new MenuVm

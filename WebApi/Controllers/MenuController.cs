@@ -84,6 +84,20 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Delete the menu specified by Id
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPost("removeDish")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> RemoveDishFromMenu(RemoveDishFromMenuRequest req)
+        {
+            var result = await _menuService.RemoveDishFromMenu(req);
+            if (result == 0)
+                return BadRequest();
+            return Ok();
+        }
+
+        /// <summary>
         /// Update the menu specified by Id
         /// </summary>
         [Authorize(Roles = "admin,creator")]

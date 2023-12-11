@@ -10,6 +10,8 @@ namespace Application.Menus
 
         Task<int> Delete(string id);
 
+        Task<int> RemoveDishFromMenu(RemoveDishFromMenuRequest req);
+
         Task<List<MenuVm>> GetAll();
 
         Task<List<MenuVm>> GetAllAvailable();
