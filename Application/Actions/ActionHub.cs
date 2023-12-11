@@ -7,7 +7,8 @@ namespace Application.Actions
     {
         public async Task SendCallStaffNotification(TableVm table)
         {
-            await Clients.All.SendAsync("SendCallStaffNotification", table);
+            var userId = Context.UserIdentifier;
+            await Clients.User(userId).SendAsync("SendCallStaffNotification", table);
         }
     }
 }
