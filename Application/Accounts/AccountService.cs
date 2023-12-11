@@ -159,8 +159,14 @@ namespace Application.Accounts
             return account;
         }
 
-        public async Task<int> Create(AccountCreateRequest req)
+        public async Task<string> Create(AccountCreateRequest req)
         {
+            var accounts = await GetAll();
+            bool isTaken = accounts.Exists(x => x.Username.Equals(req.Username));
+            if (isTaken == true)
+            {
+                return SystemConstants.UsernameExists;
+            }
             var item = new Account
             {
                 Id = req.Id,
@@ -171,8 +177,8 @@ namespace Application.Accounts
                 RoleId = req.RoleId,
             };
             _context.Add(item);
-
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return null;
         }
 
         public async Task<int> Update(AccountUpdateRequest req)

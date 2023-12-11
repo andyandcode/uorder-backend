@@ -13,6 +13,8 @@
         public const Int32 PasswordsNotNullCode = 491;
         public const string WrongPassword = "WrongPassword";
         public const Int32 WrongPasswordCode = 492;
+        public const string UsernameExists = "UsernameExists";
+        public const Int32 UsernameExistsCode = 490;
 
         public const string LoginSuccessfully = "LoginSuccessfully";
         public const Int32 LoginSuccessfullyCode = 232;

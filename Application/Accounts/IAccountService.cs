@@ -18,7 +18,7 @@ namespace Application.Accounts
 
         Task<AccountVm> GetAccountByIdPrivate(string username);
 
-        Task<int> Create(AccountCreateRequest req);
+        Task<string> Create(AccountCreateRequest req);
 
         Task<int> Update(AccountUpdateRequest req);
 
