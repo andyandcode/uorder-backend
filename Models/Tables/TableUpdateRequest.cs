@@ -19,5 +19,8 @@ namespace Models.Tables
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public static bool IsDeleted { get; set; }
     }
 }

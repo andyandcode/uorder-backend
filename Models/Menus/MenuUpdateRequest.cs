@@ -21,5 +21,8 @@ namespace Models.Menus
         public DateTime CreatedAt { get; set; }
 
         public virtual List<string> Dishes { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public static bool IsDeleted { get; set; }
     }
 }

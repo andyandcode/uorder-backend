@@ -1,7 +1,9 @@
 ﻿using Application.Files;
 using Data.EF;
 using Data.Entities;
+using Hangfire;
 using Models.Dishes;
+using Utilities.Constants;
 
 namespace Application.Dishes
 {
@@ -54,15 +56,44 @@ namespace Application.Dishes
 
         public async Task<int> Delete(string id)
         {
-            var product = await _context.Dishes.FindAsync(id);
-            _context.Dishes.Remove(product);
+            var itemToDelete = await _context.Dishes.FindAsync(id);
+
+            if (itemToDelete != null)
+            {
+                itemToDelete.IsDeleted = true;
+                BackgroundJob.Schedule(() => HardDelete(itemToDelete.Id), TimeSpan.FromSeconds(SystemConstants.ScheduledDeletionTime));
+            }
+
+            await _context.SaveChangesAsync();
+            return SystemConstants.ScheduledDeletionTime;
+        }
+
+        public async Task HardDelete(string itemId)
+        {
+            var itemToHardDelete = await _context.Dishes.FindAsync(itemId);
+
+            if (itemToHardDelete != null && itemToHardDelete.IsDeleted)
+            {
+                _context.Dishes.Remove(itemToHardDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> UndoDelete(string itemId)
+        {
+            var itemToUndo = await _context.Dishes.FindAsync(itemId);
+
+            if (itemToUndo != null)
+            {
+                itemToUndo.IsDeleted = false;
+            }
 
             return await _context.SaveChangesAsync();
         }
 
         public List<DishVm> GetAll()
         {
-            return _context.Dishes.ToList().Select(p => new DishVm()
+            return _context.Dishes.Where(x => x.IsDeleted == false).Select(p => new DishVm()
             {
                 Key = p.Id,
                 Id = p.Id,

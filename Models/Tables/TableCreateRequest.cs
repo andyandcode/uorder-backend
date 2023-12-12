@@ -22,5 +22,8 @@ namespace Models.Tables
 
         [SwaggerSchema(ReadOnly = true)]
         public DateTime CreatedAt => DateTime.Now;
+
+        [SwaggerSchema(ReadOnly = true)]
+        public static bool IsDeleted => false;
     }
 }

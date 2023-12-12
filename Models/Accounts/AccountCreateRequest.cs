@@ -25,5 +25,8 @@ namespace Models.Accounts
 
         [Required]
         public string RoleId { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public static bool IsDeleted => false;
     }
 }

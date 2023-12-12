@@ -12,6 +12,7 @@ using Application.SystemSettings;
 using Application.Tables;
 using Azure.Storage.Blobs;
 using Data.EF;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +39,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<UOrderDbContext>(options => options.UseSqlServer(_configuration.GetConnectionString(SystemConstants.MainConnectionString)));
-
+            services.AddHangfire(config => config.UseSqlServerStorage(_configuration.GetConnectionString(SystemConstants.MainConnectionString)));
             services.AddControllers().AddNewtonsoftJson().AddJsonOptions(
                 options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
             services.AddEndpointsApiExplorer();
@@ -143,6 +144,9 @@ namespace WebApi
                 endpoints.MapHub<ActionHub>("/actionHub");
                 endpoints.MapControllers();
             });
+
+            app.UseHangfireDashboard("/hangfire");
+            app.UseHangfireServer();
             //}
             app.UseHttpsRedirection();
             app.MapControllers();

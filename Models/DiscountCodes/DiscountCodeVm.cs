@@ -19,5 +19,6 @@ namespace Models.DiscountCodes
         public bool IsAvailableForUse { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

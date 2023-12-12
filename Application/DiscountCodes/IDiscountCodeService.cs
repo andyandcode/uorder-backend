@@ -13,6 +13,10 @@ namespace Application.DiscountCodes
 
         Task<int> Delete(string id);
 
+        Task HardDelete(string itemId);
+
+        Task<int> UndoDelete(string itemId);
+
         Task<List<DiscountCodeVm>> ReturnAvailableCodes(CartItemVm vm);
 
         Task<int> ApplyDiscountCode(OrderCreateRequest req);

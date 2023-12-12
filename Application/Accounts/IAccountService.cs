@@ -24,6 +24,10 @@ namespace Application.Accounts
 
         Task<int> Delete(string id);
 
+        Task HardDelete(string itemId);
+
+        Task<int> UndoDelete(string itemId);
+
         Task<List<AccountVm>> GetAll();
 
         Task<List<RoleVm>> GetAllRoles();

@@ -8,5 +8,6 @@
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public virtual ICollection<DishMenu> Dishes { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

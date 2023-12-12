@@ -2,6 +2,7 @@
 {
     public class SystemConstants
     {
+        public const int ScheduledDeletionTime = 15;
         public const string MainConnectionString = "UOrderDb";
 
         public const string ResetSuccessfully = "ResetSuccessfully";

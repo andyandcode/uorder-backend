@@ -1,8 +1,10 @@
 ﻿using Data.EF;
 using Data.Entities;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Models.Dishes;
 using Models.Menus;
+using Utilities.Constants;
 
 namespace Application.Menus
 {
@@ -69,11 +71,37 @@ namespace Application.Menus
 
         public async Task<int> Delete(string id)
         {
-            var item = await _context.Menus.FindAsync(id);
-            if (item == null)
-                return 0;
+            var itemToDelete = await _context.Menus.FindAsync(id);
 
-            _context.Menus.Remove(item);
+            if (itemToDelete != null)
+            {
+                itemToDelete.IsDeleted = true;
+                BackgroundJob.Schedule(() => HardDelete(itemToDelete.Id), TimeSpan.FromSeconds(SystemConstants.ScheduledDeletionTime));
+            }
+
+            await _context.SaveChangesAsync();
+            return SystemConstants.ScheduledDeletionTime;
+        }
+
+        public async Task HardDelete(string itemId)
+        {
+            var itemToHardDelete = await _context.Menus.FindAsync(itemId);
+
+            if (itemToHardDelete != null && itemToHardDelete.IsDeleted)
+            {
+                _context.Menus.Remove(itemToHardDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> UndoDelete(string itemId)
+        {
+            var itemToUndo = await _context.Menus.FindAsync(itemId);
+
+            if (itemToUndo != null)
+            {
+                itemToUndo.IsDeleted = false;
+            }
 
             return await _context.SaveChangesAsync();
         }
@@ -91,7 +119,7 @@ namespace Application.Menus
 
         public async Task<List<MenuVm>> GetAll()
         {
-            var result = await _context.Menus.Include(one => one.Dishes).ThenInclude(dishes => dishes.Dish).Select(p => new MenuVm
+            var result = await _context.Menus.Where(x => x.IsDeleted == false).Include(one => one.Dishes).ThenInclude(dishes => dishes.Dish).Select(p => new MenuVm
             {
                 Key = p.Id,
                 Id = p.Id,

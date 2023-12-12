@@ -67,9 +67,19 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _tableService.Delete(id);
-            if (result == 0)
-                return BadRequest();
-            return Ok();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Undo delete action
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPost("undoDelete/{itemId}")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UndoDelete(string itemId)
+        {
+            var result = await _tableService.UndoDelete(itemId);
+            return Ok(result);
         }
 
         /// <summary>

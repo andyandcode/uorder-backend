@@ -17,5 +17,6 @@ namespace Models.Dishes
         public List<string> OrderDetails { get; set; } = new List<string>();
         public virtual List<MenuVm> DishMenus { get; set; }
         public string? CoverLink { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

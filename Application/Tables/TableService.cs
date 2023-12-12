@@ -1,8 +1,10 @@
 ﻿using Application.SystemSettings;
 using Data.EF;
 using Data.Entities;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 using Models.Tables;
+using Utilities.Constants;
 
 namespace Application.Tables
 {
@@ -49,11 +51,37 @@ namespace Application.Tables
 
         public async Task<int> Delete(string id)
         {
-            var item = await _context.Tables.FindAsync(id);
-            if (item == null)
-                return 0;
+            var itemToDelete = await _context.Tables.FindAsync(id);
 
-            _context.Tables.Remove(item);
+            if (itemToDelete != null)
+            {
+                itemToDelete.IsDeleted = true;
+                BackgroundJob.Schedule(() => HardDelete(itemToDelete.Id), TimeSpan.FromSeconds(SystemConstants.ScheduledDeletionTime));
+            }
+
+            await _context.SaveChangesAsync();
+            return SystemConstants.ScheduledDeletionTime;
+        }
+
+        public async Task HardDelete(string itemId)
+        {
+            var itemToHardDelete = await _context.Tables.FindAsync(itemId);
+
+            if (itemToHardDelete != null && itemToHardDelete.IsDeleted)
+            {
+                _context.Tables.Remove(itemToHardDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> UndoDelete(string itemId)
+        {
+            var itemToUndo = await _context.Tables.FindAsync(itemId);
+
+            if (itemToUndo != null)
+            {
+                itemToUndo.IsDeleted = false;
+            }
 
             return await _context.SaveChangesAsync();
         }
@@ -61,7 +89,7 @@ namespace Application.Tables
         public async Task<List<TableVm>> GetAll()
         {
             var setting = await _systemSettingService.GetSettings();
-            return _context.Tables.ToList().Select(p => new TableVm()
+            return _context.Tables.Where(x => x.IsDeleted == false).ToList().Select(p => new TableVm()
             {
                 Key = p.Id,
                 Id = p.Id,

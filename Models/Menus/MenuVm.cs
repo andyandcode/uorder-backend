@@ -11,5 +11,6 @@ namespace Models.Menus
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public virtual List<DishVm> Dishes { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

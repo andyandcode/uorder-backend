@@ -10,5 +10,6 @@
         public DateTime CreatedAt { get; set; }
         public string RoleId { get; set; }
         public string RoleName { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
