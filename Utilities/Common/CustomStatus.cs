@@ -17,6 +17,18 @@ namespace Utilities.Common
             return result;
         }
 
+        public static IActionResult UsernameExists()
+        {
+            var result = new ContentResult
+            {
+                StatusCode = SystemConstants.UsernameExistsCode,
+                Content = "{\"message\": \"Username Exists.\"}",
+                ContentType = "application/json"
+            };
+
+            return result;
+        }
+
         public static IActionResult AccountLocked()
         {
             var result = new ContentResult

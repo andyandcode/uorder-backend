@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Data.EF;
 using Data.Entities;
+using Hangfire;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Models.DiscountCodes;
 using Models.Dishes;
 using Models.Orders;
+using Utilities.Constants;
 
 namespace Application.DiscountCodes
 {
@@ -22,7 +24,7 @@ namespace Application.DiscountCodes
 
         public async Task<List<DiscountCodeVm>> GetAll()
         {
-            var results = await _context.DiscountCodes.Include(one => one.ApplicableProductIds).Select(p => new DiscountCodeVm
+            var results = await _context.DiscountCodes.Where(x => x.IsDeleted == false).Include(one => one.ApplicableProductIds).Select(p => new DiscountCodeVm
             {
                 Key = p.Id,
                 Id = p.Id,
@@ -88,11 +90,37 @@ namespace Application.DiscountCodes
 
         public async Task<int> Delete(string id)
         {
-            var item = await _context.DiscountCodes.FindAsync(id);
-            if (item == null)
-                return 0;
+            var itemToDelete = await _context.DiscountCodes.FindAsync(id);
 
-            _context.DiscountCodes.Remove(item);
+            if (itemToDelete != null)
+            {
+                itemToDelete.IsDeleted = true;
+                BackgroundJob.Schedule(() => HardDelete(itemToDelete.Id), TimeSpan.FromSeconds(SystemConstants.ScheduledDeletionTime));
+            }
+
+            await _context.SaveChangesAsync();
+            return SystemConstants.ScheduledDeletionTime;
+        }
+
+        public async Task HardDelete(string itemId)
+        {
+            var itemToHardDelete = await _context.DiscountCodes.FindAsync(itemId);
+
+            if (itemToHardDelete != null && itemToHardDelete.IsDeleted)
+            {
+                _context.DiscountCodes.Remove(itemToHardDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> UndoDelete(string itemId)
+        {
+            var itemToUndo = await _context.DiscountCodes.FindAsync(itemId);
+
+            if (itemToUndo != null)
+            {
+                itemToUndo.IsDeleted = false;
+            }
 
             return await _context.SaveChangesAsync();
         }

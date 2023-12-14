@@ -10,6 +10,10 @@ namespace Application.Tables
 
         Task<int> Delete(string id);
 
+        Task HardDelete(string itemId);
+
+        Task<int> UndoDelete(string itemId);
+
         Task<List<TableVm>> GetAll();
 
         Task<TableVm> GetById(string id);

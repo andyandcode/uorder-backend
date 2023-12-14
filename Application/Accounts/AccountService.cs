@@ -2,6 +2,7 @@
 using AutoMapper;
 using Data.EF;
 using Data.Entities;
+using Hangfire;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -159,8 +160,14 @@ namespace Application.Accounts
             return account;
         }
 
-        public async Task<int> Create(AccountCreateRequest req)
+        public async Task<string> Create(AccountCreateRequest req)
         {
+            var accounts = await GetAll();
+            bool isTaken = accounts.Exists(x => x.Username.Equals(req.Username));
+            if (isTaken == true)
+            {
+                return SystemConstants.UsernameExists;
+            }
             var item = new Account
             {
                 Id = req.Id,
@@ -171,8 +178,8 @@ namespace Application.Accounts
                 RoleId = req.RoleId,
             };
             _context.Add(item);
-
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return null;
         }
 
         public async Task<int> Update(AccountUpdateRequest req)
@@ -195,15 +202,44 @@ namespace Application.Accounts
 
         public async Task<int> Delete(string id)
         {
-            var product = await _context.Accounts.FindAsync(id);
-            _context.Accounts.Remove(product);
+            var itemToDelete = await _context.Accounts.FindAsync(id);
+
+            if (itemToDelete != null)
+            {
+                itemToDelete.IsDeleted = true;
+                BackgroundJob.Schedule(() => HardDelete(itemToDelete.Id), TimeSpan.FromSeconds(SystemConstants.ScheduledDeletionTime));
+            }
+
+            await _context.SaveChangesAsync();
+            return SystemConstants.ScheduledDeletionTime;
+        }
+
+        public async Task HardDelete(string itemId)
+        {
+            var itemToHardDelete = await _context.Accounts.FindAsync(itemId);
+
+            if (itemToHardDelete != null && itemToHardDelete.IsDeleted)
+            {
+                _context.Accounts.Remove(itemToHardDelete);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<int> UndoDelete(string itemId)
+        {
+            var itemToUndo = await _context.Accounts.FindAsync(itemId);
+
+            if (itemToUndo != null)
+            {
+                itemToUndo.IsDeleted = false;
+            }
 
             return await _context.SaveChangesAsync();
         }
 
         public async Task<List<AccountVm>> GetAll()
         {
-            return await _context.Accounts.Select(p => new AccountVm()
+            return await _context.Accounts.Where(x => x.IsDeleted == false).Select(p => new AccountVm()
             {
                 Key = p.Id,
                 Id = p.Id,

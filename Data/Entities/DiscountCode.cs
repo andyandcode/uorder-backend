@@ -16,5 +16,6 @@
         public DateTime CreatedAt { get; set; }
         public virtual ICollection<DiscountProduct>? ApplicableProductIds { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

@@ -24,5 +24,8 @@ namespace Models.Menus
         public DateTime CreatedAt => DateTime.Now;
 
         public List<string>? Dishes { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public static bool IsDeleted => false;
     }
 }

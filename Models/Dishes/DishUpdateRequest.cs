@@ -27,5 +27,8 @@ namespace Models.Dishes
         public DateTime CreatedAt { get; set; }
 
         public IFormFile? Cover { get; set; }
+
+        [SwaggerSchema(ReadOnly = true)]
+        public static bool IsDeleted { get; set; }
     }
 }

@@ -15,5 +15,6 @@ namespace Data.Entities
         public List<OrderDetail> OrderDetails { get; set; }
         public virtual ICollection<DishMenu> Menus { get; set; }
         public virtual ICollection<DiscountProduct> HasDiscountCodes { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

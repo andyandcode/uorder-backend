@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Models.Accounts;
+using Utilities.Common;
+using Utilities.Constants;
 
 namespace WebApi.Controllers
 {
@@ -66,9 +68,8 @@ namespace WebApi.Controllers
                 return BadRequest();
 
             var result = await _accountService.Create(req);
-            if (result == 0)
-                return BadRequest();
-
+            if (result == SystemConstants.UsernameExists)
+                return CustomStatus.UsernameExists();
             return Ok(result);
         }
 
@@ -80,8 +81,18 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _accountService.Delete(id);
-            if (result == 0)
-                return BadRequest();
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Undo delete action
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPost("undoDelete/{itemId}")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UndoDelete(string itemId)
+        {
+            var result = await _accountService.UndoDelete(itemId);
             return Ok(result);
         }
 

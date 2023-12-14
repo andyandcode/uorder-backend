@@ -10,6 +10,10 @@ namespace Application.Dishes
 
         Task<int> Delete(string id);
 
+        Task HardDelete(string itemId);
+
+        Task<int> UndoDelete(string itemId);
+
         List<DishVm> GetAll();
 
         Task<DishVm> GetById(string id);

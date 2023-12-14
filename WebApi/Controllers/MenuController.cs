@@ -78,6 +78,30 @@ namespace WebApi.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             var result = await _menuService.Delete(id);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Undo delete action
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPost("undoDelete/{itemId}")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UndoDelete(string itemId)
+        {
+            var result = await _menuService.UndoDelete(itemId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Delete the menu specified by Id
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPost("removeDish")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> RemoveDishFromMenu(RemoveDishFromMenuRequest req)
+        {
+            var result = await _menuService.RemoveDishFromMenu(req);
             if (result == 0)
                 return BadRequest();
             return Ok();
