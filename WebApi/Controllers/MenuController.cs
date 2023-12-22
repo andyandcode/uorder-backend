@@ -1,5 +1,7 @@
 ﻿using Application.Menus;
+using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Models.Menus;
 
@@ -119,6 +121,19 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
 
             var result = await _menuService.Update(req);
+            if (result == 0)
+                return BadRequest();
+            return Ok();
+        }
+
+        /// <summary>
+        /// Update the menu active status specified by Id
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPatch("patch/{id}")]
+        public async Task<IActionResult> UpdateOrderStatus(string id, [FromBody] JsonPatchDocument<Menu> patchDoc)
+        {
+            var result = await _menuService.UpdateStatus(id, patchDoc);
             if (result == 0)
                 return BadRequest();
             return Ok();

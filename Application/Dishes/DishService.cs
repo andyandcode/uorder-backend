@@ -1,7 +1,10 @@
 ﻿using Application.Files;
+using AutoMapper;
 using Data.EF;
 using Data.Entities;
 using Hangfire;
+using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.EntityFrameworkCore;
 using Models.Dishes;
 using Utilities.Constants;
 
@@ -11,11 +14,13 @@ namespace Application.Dishes
     {
         private readonly UOrderDbContext _context;
         private readonly IFileService _fileService;
+        private readonly IMapper _mapper;
 
-        public DishService(UOrderDbContext dbContext, IFileService fileService)
+        public DishService(UOrderDbContext dbContext, IFileService fileService, IMapper mapper)
         {
             _context = dbContext;
             _fileService = fileService;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(DishCreateRequest req)
@@ -50,6 +55,16 @@ namespace Application.Dishes
                 Cover = req.Cover != null ? await _fileService.UploadImage(req.Cover) : null,
             };
             _context.Update(item);
+
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateStatus(string id, JsonPatchDocument<Dish> patchDoc)
+        {
+            var stockItem = await _context.Dishes.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var userDto = _mapper.Map<Dish>(stockItem);
+            patchDoc.ApplyTo(userDto);
+            _context.Update(userDto);
 
             return await _context.SaveChangesAsync();
         }
@@ -118,12 +133,13 @@ namespace Application.Dishes
             {
                 Id = product.Id,
                 Name = product.Name,
-                IsActive = product.IsActive,
                 Desc = product.Desc,
                 Price = product.Price,
+                IsActive = product.IsActive,
                 Type = product.Type,
                 CreatedAt = product.CreatedAt,
                 CoverLink = product.Cover,
+                IsDeleted = product.IsDeleted,
             };
 
             return item;

@@ -1,5 +1,7 @@
 ﻿using Application.Tables;
+using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Models.Tables;
 
@@ -94,6 +96,19 @@ namespace WebApi.Controllers
                 return BadRequest(ModelState);
 
             var result = await _tableService.Update(req);
+            if (result == 0)
+                return BadRequest();
+            return Ok();
+        }
+
+        /// <summary>
+        /// Update the table active status specified by Id
+        /// </summary>
+        [Authorize(Roles = "admin,creator")]
+        [HttpPatch("patch/{id}")]
+        public async Task<IActionResult> UpdateOrderStatus(string id, [FromBody] JsonPatchDocument<Table> patchDoc)
+        {
+            var result = await _tableService.UpdateStatus(id, patchDoc);
             if (result == 0)
                 return BadRequest();
             return Ok();

@@ -86,7 +86,7 @@ namespace WebApi
                 options.AddPolicy("CorsPolicy",
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:3000", "http://192.168.0.101:80", "http://192.168.0.101:90", "http://192.168.0.101")
+                        builder.WithOrigins("http://localhost:3000", "http://192.168.0.102:80", "http://192.168.0.102:90", "http://192.168.0.102")
                                .AllowAnyHeader()
                                .AllowAnyMethod()
                                .AllowCredentials();
@@ -137,7 +137,10 @@ namespace WebApi
             app.UseErrorHandlerMiddleware();
 
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "UOrder API v1");
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<OrderHub>("/bookingHub");
@@ -146,7 +149,7 @@ namespace WebApi
             });
 
             app.UseHangfireDashboard("/hangfire");
-            app.UseHangfireServer();
+            //app.UseHangfireServer();
             //}
             app.UseHttpsRedirection();
             app.MapControllers();

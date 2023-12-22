@@ -1,6 +1,8 @@
-﻿using Data.EF;
+﻿using AutoMapper;
+using Data.EF;
 using Data.Entities;
 using Hangfire;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Models.Dishes;
 using Models.Menus;
@@ -11,10 +13,12 @@ namespace Application.Menus
     public class MenuService : IMenuService
     {
         private readonly UOrderDbContext _context;
+        private readonly IMapper _mapper;
 
-        public MenuService(UOrderDbContext dbContext)
+        public MenuService(UOrderDbContext dbContext, IMapper mapper)
         {
             _context = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(MenuCreateRequest req)
@@ -66,6 +70,16 @@ namespace Application.Menus
                 _context.DishMenus.Add(connect);
             }
             _context.Update(item);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateStatus(string id, JsonPatchDocument<Menu> patchDoc)
+        {
+            var stockItem = await _context.Menus.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var userDto = _mapper.Map<Menu>(stockItem);
+            patchDoc.ApplyTo(userDto);
+            _context.Update(userDto);
+
             return await _context.SaveChangesAsync();
         }
 
@@ -181,9 +195,10 @@ namespace Application.Menus
             {
                 Id = target.Id,
                 Name = target.Name,
-                IsActive = target.IsActive,
                 Desc = target.Desc,
+                IsActive = target.IsActive,
                 CreatedAt = target.CreatedAt,
+                IsDeleted = target.IsDeleted,
             };
 
             return item;

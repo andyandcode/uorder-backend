@@ -1,7 +1,9 @@
 ﻿using Application.SystemSettings;
+using AutoMapper;
 using Data.EF;
 using Data.Entities;
 using Hangfire;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.EntityFrameworkCore;
 using Models.Tables;
 using Utilities.Constants;
@@ -12,11 +14,13 @@ namespace Application.Tables
     {
         private readonly UOrderDbContext _context;
         private readonly ISystemSettingService _systemSettingService;
+        private readonly IMapper _mapper;
 
-        public TableService(UOrderDbContext dbContext, ISystemSettingService systemSettingService)
+        public TableService(UOrderDbContext dbContext, ISystemSettingService systemSettingService, IMapper mapper)
         {
             _context = dbContext;
             _systemSettingService = systemSettingService;
+            _mapper = mapper;
         }
 
         public async Task<int> Create(TableCreateRequest req)
@@ -45,6 +49,16 @@ namespace Application.Tables
                 CreatedAt = req.CreatedAt,
             };
             _context.Update(item);
+
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateStatus(string id, JsonPatchDocument<Table> patchDoc)
+        {
+            var stockItem = await _context.Tables.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var userDto = _mapper.Map<Table>(stockItem);
+            patchDoc.ApplyTo(userDto);
+            _context.Update(userDto);
 
             return await _context.SaveChangesAsync();
         }
@@ -115,6 +129,7 @@ namespace Application.Tables
                 IsActive = target.IsActive,
                 Desc = target.Desc,
                 CreatedAt = target.CreatedAt,
+                IsDeleted = target.IsDeleted,
             };
 
             return item;
