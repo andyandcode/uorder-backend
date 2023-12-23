@@ -7,3 +7,5 @@
 4. Run **WebApi** project
 
 *Default admin account (username&password): admin*
+
+## API Documents: <host>/swagger/index.js
