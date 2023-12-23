@@ -1,4 +1,6 @@
-﻿using Models.Tables;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
+using Models.Tables;
 
 namespace Application.Tables
 {
@@ -17,5 +19,7 @@ namespace Application.Tables
         Task<List<TableVm>> GetAll();
 
         Task<TableVm> GetById(string id);
+
+        Task<int> UpdateStatus(string id, JsonPatchDocument<Table> patchDoc);
     }
 }

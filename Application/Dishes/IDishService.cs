@@ -1,4 +1,6 @@
-﻿using Models.Dishes;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
+using Models.Dishes;
 
 namespace Application.Dishes
 {
@@ -19,5 +21,7 @@ namespace Application.Dishes
         Task<DishVm> GetById(string id);
 
         List<DishVm> GetAllById(string id);
+
+        Task<int> UpdateStatus(string id, JsonPatchDocument<Dish> patchDoc);
     }
 }

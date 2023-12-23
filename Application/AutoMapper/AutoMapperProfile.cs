@@ -2,8 +2,11 @@
 using Data.Entities;
 using Models.Accounts;
 using Models.DiscountCodes;
+using Models.Dishes;
+using Models.Menus;
 using Models.OrderDetails;
 using Models.Orders;
+using Models.Tables;
 
 namespace Application.AutoMapper
 {
@@ -15,6 +18,9 @@ namespace Application.AutoMapper
             CreateMap<AccountVm, Account>();
             CreateMap<OrderDetailsVm, OrderDetail>();
             CreateMap<DiscountCodeVm, DiscountCode>();
+            CreateMap<DishVm, Dish>();
+            CreateMap<MenuVm, Menu>();
+            CreateMap<TableVm, Table>();
         }
     }
 }

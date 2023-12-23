@@ -1,4 +1,6 @@
-﻿using Models.Menus;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.JsonPatch;
+using Models.Menus;
 
 namespace Application.Menus
 {
@@ -21,5 +23,7 @@ namespace Application.Menus
         Task<List<MenuVm>> GetAllAvailable();
 
         Task<MenuVm> GetById(string id);
+
+        Task<int> UpdateStatus(string id, JsonPatchDocument<Menu> patchDoc);
     }
 }
